@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { Button } from '@/shared/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/shared/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { Title } from '@/shared/ui/title';
@@ -81,12 +81,12 @@ export function AuthModal() {
    return (
       <Dialog open={open} onOpenChange={setOpen}>
          <DialogTrigger asChild>
-            <Button size='small' variant='secondary' className='flex gap-2'>
+            <Button className='flex gap-2' size='small' variant='secondary'>
                {isLogin ? 'Авторизоваться' : 'Регистрация'}
             </Button>
          </DialogTrigger>
 
-         <DialogContent className='sm:max-w-md' aria-describedby='dialog-description'>
+         <DialogContent aria-describedby='dialog-description' className='sm:max-w-md'>
             <DialogHeader>
                <DialogTitle>{isLogin ? 'Авторизация' : 'Регистрация'}</DialogTitle>
                <DialogDescription id='dialog-description'>Пожалуйста, заполните форму ниже.</DialogDescription>
@@ -100,10 +100,8 @@ export function AuthModal() {
                </Button>
             </div>
             <Form {...form}>
-               <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+               <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
                   <FormField
-                     control={form.control}
-                     name='email'
                      render={({ field }) => (
                         <FormItem>
                            <FormLabel>Email</FormLabel>
@@ -113,52 +111,54 @@ export function AuthModal() {
                            <FormMessage />
                         </FormItem>
                      )}
+                     control={form.control}
+                     name='email'
                   />
                   {!isLogin && (
                      <FormField
-                        control={form.control}
-                        name='username'
                         render={({ field }) => (
                            <FormItem>
                               <FormLabel>Имя пользователя</FormLabel>
                               <FormControl>
-                                 <Input type='text' placeholder='Введите имя пользователя' {...field} />
+                                 <Input placeholder='Введите имя пользователя' type='text' {...field} />
                               </FormControl>
                               <FormMessage />
                            </FormItem>
                         )}
+                        control={form.control}
+                        name='username'
                      />
                   )}
                   <FormField
-                     control={form.control}
-                     name='password'
                      render={({ field }) => (
                         <FormItem>
                            <FormLabel>Пароль</FormLabel>
                            <FormControl>
-                              <Input type='password' placeholder='Введите пароль' {...field} />
+                              <Input placeholder='Введите пароль' type='password' {...field} />
                            </FormControl>
                            <FormMessage />
                         </FormItem>
                      )}
+                     control={form.control}
+                     name='password'
                   />
                   {!isLogin && (
                      <FormField
-                        control={form.control}
-                        name='confirmPassword'
                         render={({ field }) => (
                            <FormItem>
                               <FormLabel>Подтвердите пароль</FormLabel>
                               <FormControl>
-                                 <Input type='password' placeholder='Повторите пароль' {...field} />
+                                 <Input placeholder='Повторите пароль' type='password' {...field} />
                               </FormControl>
                               <FormMessage />
                            </FormItem>
                         )}
+                        control={form.control}
+                        name='confirmPassword'
                      />
                   )}
-                  {error && <Title text={error} className='text-red-500' />}
-                  <Button type='submit' className='w-full'>
+                  {error && <Title className='text-red-500' text={error} />}
+                  <Button className='w-full' type='submit'>
                      {isLogin ? 'Войти' : 'Зарегистрироваться'}
                   </Button>
                </form>

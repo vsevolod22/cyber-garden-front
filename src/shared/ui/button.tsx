@@ -34,17 +34,17 @@ export interface ButtonProps
    extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'prefix'>,
       VariantProps<typeof buttonVariants> {
    asChild?: boolean;
-   text?: string;
    children?: React.ReactNode;
    prefix?: React.ReactNode;
    suffix?: React.ReactNode;
+   text?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
    ({ className, children, text, variant, size, prefix, suffix, asChild = false, ...props }, ref) => {
       const Comp = asChild ? Slot : 'button';
       return (
-         <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+         <Comp ref={ref} className={cn(buttonVariants({ variant, size, className }))} {...props}>
             {prefix && <span className='mr-2'>{prefix}</span>}
             {children || <span className='px-1.5'>{text}</span>}
             {suffix && <span className='ml-2'>{suffix}</span>}

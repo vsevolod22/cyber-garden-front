@@ -10,15 +10,12 @@ const BaseLayout = () => {
       <SidebarProvider>
          <AppSidebar />
          <SidebarInset>
-            <SidebarTrigger className='-ml-1' />
             <div className='h-screen bg-background'>
                <Header />
                <div>
-                  <div>
-                     <Outlet />
-                  </div>
-                  <Footer />
+                  <Outlet />
                </div>
+               <Footer />
             </div>
          </SidebarInset>
       </SidebarProvider>
