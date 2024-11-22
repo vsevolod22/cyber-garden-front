@@ -7,16 +7,17 @@ import { appRouter } from './app/providers/router/AppRouter.tsx';
 import { queryClient } from './shared/api/query-client.ts';
 
 import '@/app/styles/index.css';
+import { ThemeProvider } from './app/providers/theme/ThemeProvider.tsx';
 
 createRoot(document.getElementById('root')!).render(
-   <StrictMode>
+   <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
       <QueryClientProvider client={queryClient}>
          <RouterProvider
-            router={appRouter}
             future={{
                v7_startTransition: true,
             }}
+            router={appRouter}
          />
       </QueryClientProvider>
-   </StrictMode>,
+   </ThemeProvider>,
 );

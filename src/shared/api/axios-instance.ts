@@ -1,11 +1,14 @@
 import { refreshTokenRequest } from '@/modules/Auth/model/api/refreshTokenRequest';
-import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import * as decode from 'jwt-decode'; // Импортируем как модуль
 
 const api: AxiosInstance = axios.create({
    baseURL: 'https://cybergarden.leganyst.ru',
    withCredentials: true,
+   headers: {
+      Accept: 'application/json', // Указываем ожидаемый формат ответа
+   },
 });
 
 const onRequest = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
