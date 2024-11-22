@@ -1,10 +1,10 @@
+import { Task } from '@/modules/Task';
 import { Container } from '@/widgets/Container';
-import { Tasks } from '@/widgets/Tasks';
 
 export const MainPage = () => {
    return (
       <Container>
-         <Tasks />
+         <Task />
       </Container>
    );
 };
