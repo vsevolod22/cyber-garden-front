@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import axios from 'axios';
 
@@ -19,9 +19,6 @@ const login = async (credentials: LoginCredentials): Promise<IAuthResponse> => {
             email: credentials.email, // email в строке запроса
             password: credentials.password, // password в строке запроса
          },
-         headers: {
-            Accept: 'application/json', // Указываем ожидаемый формат ответа
-         },
       },
    );
 
@@ -31,6 +28,21 @@ const login = async (credentials: LoginCredentials): Promise<IAuthResponse> => {
 
    localStorage.setItem('token', response.data.access_token); // Сохраняем токен
    return response.data;
+};
+
+const ping = async () => {
+   const response = await api.get<IAuthResponse>(
+      `/ping`, // URL
+   );
+
+   return response.data;
+};
+
+export const usePing = () => {
+   return useQuery({
+      queryKey: ['ping'],
+      queryFn: ping,
+   });
 };
 
 export const useLogin = () => {

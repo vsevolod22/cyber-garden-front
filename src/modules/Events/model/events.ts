@@ -1,11 +1,8 @@
 import type { UseQueryResult } from '@tanstack/react-query';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
-import axios from 'axios';
-
-import { api } from '@/modules/api/api';
+import { useQuery } from '@tanstack/react-query';
 
 import type { Events } from './types';
+import { api } from '@/shared/api/axios-instance';
 
 const events = async (): Promise<Events> => {
    const response = await api.get<Events>('/events/event/', {
