@@ -12,12 +12,11 @@ interface LoginCredentials {
 
 const login = async (credentials: LoginCredentials): Promise<IAuthResponse> => {
    const response = await api.post<IAuthResponse>(
-      `/auth/login`, // URL
+      `/auth/login?email=${credentials.email}&password=${credentials.password}`, // URL
 
       {
-         params: {
-            email: credentials.email, // email в строке запроса
-            password: credentials.password, // password в строке запроса
+         headers: {
+            Accept: 'application/json', // Указываем ожидаемый формат ответа
          },
       },
    );
