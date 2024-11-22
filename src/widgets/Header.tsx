@@ -15,7 +15,7 @@ interface HeaderProps {
 export const Header = ({ className }: HeaderProps) => {
    return (
       <header className={cn('h-[var(--header-height)]', className)}>
-         <Container className='flex h-full border border-border bg-background-secondary'>
+         <div className='flex h-full border border-border bg-background-secondary'>
             <Link to='/' className='flex items-center gap-[10px] border-r border-border px-6 py-5'>
                <span className='text-2xl'>
                   <strong>bigas</strong> <span className='font-light'>production</span>
@@ -35,7 +35,7 @@ export const Header = ({ className }: HeaderProps) => {
                   <AuthModal />
                </div>
             </div>
-         </Container>
+         </div>
       </header>
    );
 };
