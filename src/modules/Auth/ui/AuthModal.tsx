@@ -64,6 +64,8 @@ export function AuthModal() {
             },
          });
       } else {
+         const filteredValues = { ...values };
+         delete filteredValues.confirmPassword;
          register(values, {
             onSuccess: (data) => {
                localStorage.setItem('token', data.access_token);

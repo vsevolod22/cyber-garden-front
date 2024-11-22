@@ -11,7 +11,7 @@ interface RegisterCredentials {
 }
 
 const register = async (credentials: RegisterCredentials): Promise<IAuthResponse> => {
-   const response = await api.post<IAuthResponse>('/auth/registration', {
+   const response = await api.post<IAuthResponse>('/auth/register', {
       ...credentials,
    });
    if (response.status >= 400) {
