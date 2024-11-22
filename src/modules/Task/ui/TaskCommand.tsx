@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 interface TaskCommandProps {
    children: ReactNode;
-   svg: ReactNode;
+   svg?: ReactNode;
    text: string;
 }
 
@@ -17,7 +17,7 @@ export function TaskCommand({ svg, text, children }: TaskCommandProps) {
                {text}
             </Button>
          </DropdownMenuTrigger>
-         <DropdownMenuContent className='w-56 border-none'>{children}</DropdownMenuContent>
+         <DropdownMenuContent className='border-none'>{children}</DropdownMenuContent>
       </DropdownMenu>
    );
 }
