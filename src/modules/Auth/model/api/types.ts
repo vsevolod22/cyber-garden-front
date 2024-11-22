@@ -1,3 +1,4 @@
 export interface IAuthResponse {
-   access: string;
+   access_token: string;
+   refresh_token: string;
 }
