@@ -1,28 +1,28 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
-import { DropdownCommand } from './DropDown';
-import { CommandCalendar } from './Command';
-import { Calendar } from 'lucide-react';
 
-interface TasksProps {
+import { Calendar } from 'lucide-react';
+import { TaskCommand } from './TaskCommand';
+import { CommandCalendar } from '@/widgets/Command';
+
+interface TaskProps {
    className?: string;
 }
 
-export const Tasks = ({ className }: TasksProps) => {
+export const Task = ({ className }: TaskProps) => {
    return (
       <div className='mt-14 flex flex-col gap-8'>
          <h1 className='text-4xl font-bold'>Входящие</h1>
          <Card>
             <CardHeader className='flex flex-col gap-4'>
                <CardTitle className='h-5'>Добавить задачу</CardTitle>
-               <Textarea placeholder='Название задачи' className='my-4 border-none' />
-               <Textarea placeholder='Описание задачи' className='border-none' />
+               <Textarea className='my-4 border-none' placeholder='Название задачи' />
+               <Textarea className='border-none' placeholder='Описание задачи' />
                <div className='flex'>
-                  <DropdownCommand svg={<Calendar className='mr-2 w-4' />} text='Срок'>
-                     {' '}
+                  <TaskCommand svg={<Calendar className='mr-2 w-4' />} text='Срок'>
                      <CommandCalendar />
-                  </DropdownCommand>
+                  </TaskCommand>
                </div>
             </CardHeader>
             <CardContent className='flex'></CardContent>

@@ -1,23 +1,22 @@
 import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-interface DropdownCommandProps {
+interface TaskCommandProps {
+   children: ReactNode;
    svg: ReactNode;
    text: string;
-   children: ReactNode;
 }
 
-export function DropdownCommand({ svg, text, children }: DropdownCommandProps) {
+export function TaskCommand({ svg, text, children }: TaskCommandProps) {
    return (
       <DropdownMenu>
          <DropdownMenuTrigger asChild>
-            <Button variant='outline' className='h-8'>
+            <Button className='h-8' variant='outline'>
                {svg}
                {text}
             </Button>
          </DropdownMenuTrigger>
-
          <DropdownMenuContent className='w-56 border-none'>{children}</DropdownMenuContent>
       </DropdownMenu>
    );
