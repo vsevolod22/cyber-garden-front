@@ -22,13 +22,13 @@ export function AuthModal() {
 
    const loginSchema = z.object({
       email: z.string().email({ message: 'Некорректный email' }),
-      password: z.string().min(8, { message: 'Пароль должен быть не менее 8 символов' }),
+      password: z.string().min(2, { message: 'Пароль должен быть не менее 8 символов' }),
    });
 
    const registerSchema = loginSchema
       .extend({
          username: z.string().min(3, { message: 'Имя пользователя должно быть не менее 3 символов' }),
-         confirmPassword: z.string().min(8, { message: 'Пароль должен быть не менее 8 символов' }),
+         confirmPassword: z.string().min(2, { message: 'Пароль должен быть не менее 8 символов' }),
       })
       .refine((data) => data.password === data.confirmPassword, {
          message: 'Пароли должны совпадать',
