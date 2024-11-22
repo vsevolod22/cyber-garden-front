@@ -1,16 +1,24 @@
 import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
-import { CommandCalendar } from './Command';
-export function DropdownCommand() {
+import { ReactNode } from 'react';
+
+interface DropdownCommandProps {
+   svg: ReactNode;
+   text: string;
+   children: ReactNode;
+}
+
+export function DropdownCommand({ svg, text, children }: DropdownCommandProps) {
    return (
       <DropdownMenu>
          <DropdownMenuTrigger asChild>
-            <Button variant='outline'>Open</Button>
+            <Button variant='outline' className='h-8'>
+               {svg}
+               {text}
+            </Button>
          </DropdownMenuTrigger>
 
-         <DropdownMenuContent className='w-56 border-none'>
-            <CommandCalendar />
-         </DropdownMenuContent>
+         <DropdownMenuContent className='w-56 border-none'>{children}</DropdownMenuContent>
       </DropdownMenu>
    );
 }

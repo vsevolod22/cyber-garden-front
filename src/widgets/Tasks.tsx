@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 import { DropdownCommand } from './DropDown';
+import { CommandCalendar } from './Command';
+import { Calendar } from 'lucide-react';
 
 interface TasksProps {
    className?: string;
@@ -17,7 +19,10 @@ export const Tasks = ({ className }: TasksProps) => {
                <Textarea placeholder='Название задачи' className='my-4 border-none' />
                <Textarea placeholder='Описание задачи' className='border-none' />
                <div className='flex'>
-                  <DropdownCommand />
+                  <DropdownCommand svg={<Calendar className='mr-2 w-4' />} text='Срок'>
+                     {' '}
+                     <CommandCalendar />
+                  </DropdownCommand>
                </div>
             </CardHeader>
             <CardContent className='flex'></CardContent>
