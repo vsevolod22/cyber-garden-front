@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import type { IAuthResponse } from './types';
 import { api } from '@/shared/api/axios-instance';
+import { useTokenStore } from '../store/authStore';
 
 interface LoginCredentials {
    email: string;
@@ -11,12 +12,13 @@ interface LoginCredentials {
 }
 
 const login = async (credentials: LoginCredentials): Promise<IAuthResponse> => {
+   const { setToken } = useTokenStore(); // Zustand для управления состояниями
    const response = await api.post<IAuthResponse>(
-      `/auth/login?email=${credentials.email}&password=${credentials.password}`, // URL
+      `/auth/login?email=${credentials.email}&password=${credentials.password}`,
 
       {
          headers: {
-            Accept: 'application/json', // Указываем ожидаемый формат ответа
+            Accept: 'application/json',
          },
       },
    );
@@ -25,14 +27,12 @@ const login = async (credentials: LoginCredentials): Promise<IAuthResponse> => {
       throw new Error('Ошибка авторизации');
    }
 
-   localStorage.setItem('token', response.data.access_token); // Сохраняем токен
+   setToken(response.data.access_token);
    return response.data;
 };
 
 const ping = async () => {
-   const response = await api.get<IAuthResponse>(
-      `/ping`, // URL
-   );
+   const response = await api.get<IAuthResponse>(`/ping`);
 
    return response.data;
 };

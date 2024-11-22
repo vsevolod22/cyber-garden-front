@@ -1,10 +1,10 @@
 import { Container } from '@/widgets/Container';
-import { EventCard } from '@/widgets/EventCard';
+import { Tasks } from '@/widgets/Tasks';
 
 export const MainPage = () => {
    return (
       <Container>
-         <EventCard />
+         <Tasks />
       </Container>
    );
 };
