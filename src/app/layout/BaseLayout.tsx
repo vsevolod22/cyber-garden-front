@@ -2,13 +2,13 @@ import { Outlet } from 'react-router-dom';
 
 import { Footer } from '@/widgets/Footer';
 import { Header } from '@/widgets/Header';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/shared/ui/sidebar';
-import { AppSidebar } from '@/widgets/Sidebar';
+import { SidebarInset, SidebarProvider } from '@/shared/ui/sidebar';
+import { Sidebar } from '@/widgets';
 
 const BaseLayout = () => {
    return (
       <SidebarProvider>
-         <AppSidebar />
+         <Sidebar />
          <SidebarInset>
             <div className='h-screen bg-background'>
                <Header />
