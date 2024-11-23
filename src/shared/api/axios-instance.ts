@@ -13,8 +13,6 @@ const api: AxiosInstance = axios.create({
 const onRequest = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
    const { accessToken } = useTokenStore.getState(); // Get accessToken from the token store
 
-   console.log('Токен в onRequest:', accessToken);
-
    if (accessToken && !config.url?.includes('auth')) {
       config.headers.set('Authorization', `Bearer ${accessToken}`);
    }

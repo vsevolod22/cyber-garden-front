@@ -1,9 +1,13 @@
-export const Loader = () => {
+import { cn } from '@/utils/lib/utils';
+
+type Size = 'normal' | 'small';
+
+export const Loader = ({ className }: { className?: string }) => {
    return (
       <div role='status'>
          <svg
             aria-hidden='true'
-            className='h-8 w-8 animate-spin fill-primary text-gray-200 dark:text-gray-600'
+            className={cn('h-8 w-8 animate-spin fill-primary text-gray-200 dark:text-gray-600', className)}
             fill='none'
             viewBox='0 0 100 101'
             xmlns='http://www.w3.org/2000/svg'

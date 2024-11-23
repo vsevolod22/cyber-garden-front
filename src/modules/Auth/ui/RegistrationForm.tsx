@@ -45,9 +45,9 @@ export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: Registr
          };
 
          await createWorkspace(defaultWorkspaceData, {
-            onSuccess: (newWorkspace) => {
-               console.log('Воркспейс успешно создан:', newWorkspace);
-            },
+            // onSuccess: (newWorkspace) => {
+            //    console.log('Воркспейс успешно создан:', newWorkspace);
+            // },
             onError: (error) => {
                console.error('Ошибка при создании воркспейса:', error.message);
             },

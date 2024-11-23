@@ -37,7 +37,6 @@ export const useLogin = () => {
    return useMutation<IAuthResponse, AxiosError, LoginCredentials>({
       mutationFn: login,
       onSuccess: (data) => {
-         console.log('Успешный вход в систему', data);
          setAccessToken(data.access_token);
          setRefreshToken(data.refresh_token);
       },

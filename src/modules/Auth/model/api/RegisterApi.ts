@@ -22,7 +22,6 @@ export const useRegister = () => {
    return useMutation<IAuthResponse, AxiosError, RegisterCredentials>({
       mutationFn: register,
       onSuccess: (data) => {
-         console.log('Успешная регистрация', data);
          setAccessToken(data.access_token);
          setRefreshToken(data.refresh_token);
       },

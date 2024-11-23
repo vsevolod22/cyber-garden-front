@@ -30,9 +30,9 @@ const createTaskComment = async (commentData: CreateCommentData): Promise<Commen
 export const useCreateTaskComment = () => {
    return useMutation<Comment, AxiosError, CreateCommentData>({
       mutationFn: createTaskComment,
-      onSuccess: (newComment) => {
-         console.log('Комментарий успешно создан:', newComment);
-      },
+      // onSuccess: (newComment) => {
+      //    console.log('Комментарий успешно создан:', newComment);
+      // },
       onError: (error) => {
          console.error('Ошибка при создании комментария:', error.message);
       },

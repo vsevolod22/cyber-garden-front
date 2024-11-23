@@ -7,8 +7,9 @@ import { Plus, User, X } from 'lucide-react';
 import { useState } from 'react';
 
 import { useWorkspaceStore } from '@/modules/WorkSpaces/model/store/workSpaceStore';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 import { useCreateProject } from '@/modules/projects/api/CreateProjectApi';
+import { Loader } from '@/shared/ui/loader';
 
 const usersData = [
    { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)' },
@@ -59,13 +60,21 @@ export const SidebarAddProject = () => {
    return (
       <DropdownMenu open={isDropdownOpen} onOpenChange={setDropdownOpen}>
          <DropdownMenuTrigger asChild>
-            <Button className='h-5 w-5' size='icon' variant='ghost' onClick={(e) => e.stopPropagation()}>
+            {/* {isPending && <Loader />}
+            {isSuccess && (
+               <Button className='h-5 w-5' size='icon' variant='ghost' onClick={(e) => e.stopPropagation()}>
+                  <Plus className='h-5 w-5' />
+               </Button>
+            )} */}
+
+            <Button className='h-5 w-5' disabled={isPending} size='icon' variant='ghost' onClick={(e) => e.stopPropagation()}>
                <Plus className='h-5 w-5' />
             </Button>
          </DropdownMenuTrigger>
          <DropdownMenuContent align='start' className='w-96 p-4' side='right' onClick={(e) => e.stopPropagation()}>
-            <div className='mb-4 flex items-center justify-between'>
+            <div className='relative mb-4 flex items-center justify-between'>
                <h3 className='text-lg font-semibold'>Добавить проект</h3>
+               {isPending && <Loader className='absolute right-8 top-0' />}
                <Button className='h-5 w-5' size='icon' variant='ghost' onClick={() => setDropdownOpen(false)}>
                   <X className='h-5 w-5' />
                </Button>
