@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+// useRegister.ts
+import { useMutation } from '@tanstack/react-query';
 import { IAuthResponse } from './types';
 import { AxiosError } from 'axios';
 import { api } from '@/shared/api/axios-instance';
@@ -11,12 +12,7 @@ interface RegisterCredentials {
 }
 
 const register = async (credentials: RegisterCredentials): Promise<IAuthResponse> => {
-   const response = await api.post<IAuthResponse>('/auth/register', {
-      ...credentials,
-   });
-   if (response.status >= 400) {
-      throw new Error('Ошибка регистрации');
-   }
+   const response = await api.post<IAuthResponse>('/auth/register', credentials);
    return response.data;
 };
 

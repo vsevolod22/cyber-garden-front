@@ -13,13 +13,7 @@ interface Workspace {
 }
 
 const createWorkspace = async (workspaceData: CreateWorkspaceData): Promise<Workspace> => {
-   const response = await api.post<Workspace>('/workspaces/', workspaceData, {
-      headers: {
-         Accept: 'application/json',
-
-         'Content-Type': 'application/json',
-      },
-   });
+   const response = await api.post<Workspace>('/workspaces/', workspaceData);
    return response.data;
 };
 

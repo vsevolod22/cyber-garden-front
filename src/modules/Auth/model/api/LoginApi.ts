@@ -37,6 +37,7 @@ export const useLogin = () => {
       mutationFn: login,
       onSuccess: (data) => {
          console.log('Успешный вход в систему', data);
+
          setAccessToken(data.access_token);
          setRefreshToken(data.refresh_token);
       },
