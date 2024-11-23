@@ -107,7 +107,7 @@ export const RegistrationForm = ({ toggleOpenStatus }: RegistrationFormProps) =>
                name='confirmPassword'
             />
             {error && <Title className='text-red-500' text={error} />}
-            <Button className='absolute bottom-6 w-[160px]' type='submit'>
+            <Button className='w-[160px]' type='submit'>
                Зарегистрироваться
             </Button>
          </form>

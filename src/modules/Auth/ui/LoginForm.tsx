@@ -72,7 +72,7 @@ export const LoginForm = ({ toggleOpenStatus }: LoginFormProps) => {
                name='password'
             />
             {error && <Title className='text-red-500' text={error} />}
-            <Button className='absolute bottom-6 w-[160px]' type='submit'>
+            <Button className='w-[160px]' type='submit'>
                Войти
             </Button>
          </form>

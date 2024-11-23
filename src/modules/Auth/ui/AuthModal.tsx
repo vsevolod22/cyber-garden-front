@@ -20,7 +20,7 @@ export function AuthModal() {
             </Button>
          </DialogTrigger>
          <Tabs defaultValue={'login'}>
-            <DialogContent aria-describedby='dialog-description' className='flex min-h-[600px] flex-col sm:max-w-md'>
+            <DialogContent aria-describedby='dialog-description' className='flex flex-col sm:max-w-md'>
                <DialogHeader className='h-6'>
                   <TabsList className=''>
                      <TabsTrigger value='login'>Авторизация</TabsTrigger>
