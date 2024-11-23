@@ -23,8 +23,12 @@ export function AuthModal() {
             <DialogContent aria-describedby='dialog-description' className='flex flex-col sm:max-w-md'>
                <DialogHeader className='h-6'>
                   <TabsList className=''>
-                     <TabsTrigger value='login'>Авторизация</TabsTrigger>
-                     <TabsTrigger value='register'>Регистрация</TabsTrigger>
+                     <TabsTrigger className='hover:bg-background' value='login'>
+                        Авторизация
+                     </TabsTrigger>
+                     <TabsTrigger className='hover:bg-background' value='register'>
+                        Регистрация
+                     </TabsTrigger>
                   </TabsList>
                </DialogHeader>
                <TabsContent value='login'>

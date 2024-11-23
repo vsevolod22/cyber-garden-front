@@ -6,15 +6,15 @@ import React from 'react';
 import { Button } from '@/shared/ui/button';
 
 interface CreateModalProps {
-   children: React.ReactNode;
-   buttonText?: string;
-   showButton?: boolean;
-   buttonIcon?: React.ReactNode;
+   buttonChildren?: string | React.ReactNode;
    buttonClassName?: string;
+   buttonIcon?: React.ReactNode;
+   children: React.ReactNode;
+   closeClassName?: string;
+   closeIcon?: React.ReactNode;
    modalClassName?: string;
    overlayClassName?: string;
-   closeIcon?: React.ReactNode;
-   closeClassName?: string;
+   showButton?: boolean;
 }
 
 export const CreateModalContent = React.forwardRef<
@@ -50,9 +50,9 @@ export const CreateModalContent = React.forwardRef<
 ));
 CreateModalContent.displayName = 'CreateModalContent';
 
-export const CreateModal: React.FC<CreateModalProps> = ({
+export const CreateTaskModal: React.FC<CreateModalProps> = ({
    children,
-   buttonText = 'Добавить задачу',
+   buttonChildren = 'Добавить задачу',
    showButton = true,
    buttonIcon,
    buttonClassName,
@@ -70,15 +70,15 @@ export const CreateModal: React.FC<CreateModalProps> = ({
                   prefix={buttonIcon}
                   variant='ghost'
                >
-                  {buttonText}
+                  {buttonChildren}
                </Button>
             </DialogTrigger>
          )}
          <CreateModalContent
             className={modalClassName}
-            overlayClassName={overlayClassName}
-            closeIcon={closeIcon}
             closeClassName={closeClassName}
+            closeIcon={closeIcon}
+            overlayClassName={overlayClassName}
          >
             {children}
          </CreateModalContent>
