@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import { api } from '@/shared/api/axios-instance';
 import { AxiosError } from 'axios';
 
-// Интерфейс задачи
 interface Task {
    name: string;
    due_date: string;
@@ -16,7 +15,6 @@ interface Task {
    updated_at: string;
 }
 
-// Данные для обновления задачи
 interface UpdateTaskData {
    name?: string;
    due_date?: string;
@@ -25,7 +23,6 @@ interface UpdateTaskData {
    assigned_to?: number;
 }
 
-// Функция для PATCH-запроса
 const updateTask = async (taskId: number, taskData: UpdateTaskData): Promise<Task> => {
    const response = await api.patch<Task>(`/tasks/${taskId}`, taskData, {
       headers: {
@@ -36,13 +33,11 @@ const updateTask = async (taskId: number, taskData: UpdateTaskData): Promise<Tas
    return response.data;
 };
 
-// Хук для обновления задачи
 export const useUpdateTask = () => {
    return useMutation<Task, AxiosError, { taskId: number; taskData: UpdateTaskData }>({
       mutationFn: ({ taskId, taskData }) => updateTask(taskId, taskData),
       onSuccess: (updatedTask) => {
          console.log('Задача успешно обновлена:', updatedTask);
-         // Можно добавить логику для обновления состояния через Zustand или React Query
       },
       onError: (error) => {
          console.error('Ошибка при обновлении задачи:', error.message);

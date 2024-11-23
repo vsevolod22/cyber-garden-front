@@ -22,6 +22,7 @@ interface TaskState {
    setTasks: (tasks: Task[]) => void; // Установка всех задач
    addTask: (task: Task) => void; // Добавление задачи
    updateTask: (updatedTask: Task) => void; // Обновление задачи
+   toggleTaskCompletion: (id: number) => void; // Переключение состояния задачи
    removeTask: (id: number) => void; // Удаление задачи
    setTaskChecked: (id: number, isChecked: boolean) => void; // Установка состояния задачи
    getTaskById: (id: number) => Task | undefined; // Получение задачи по ID
@@ -47,6 +48,12 @@ export const useTaskStore = create<TaskState>()(
          updateTask: (updatedTask) =>
             set((state) => ({
                tasks: state.tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
+            })),
+
+         // Переключить состояние выполнения задачи
+         toggleTaskCompletion: (id) =>
+            set((state) => ({
+               tasks: state.tasks.map((task) => (task.id === id ? { ...task, is_completed: !task.is_completed } : task)),
             })),
 
          // Удалить задачу

@@ -10,6 +10,7 @@ import { Title } from '@/shared/ui/title';
 import { useEffect, useState } from 'react';
 import { useTokenStore } from '../model/store/authStore';
 import { Loader } from '@/shared/ui/loader';
+import { useCreateWorkspace } from '@/modules/WorkSpaces/model/api/workSpacesPost';
 
 const registerSchema = loginSchema
    .extend({
@@ -30,6 +31,26 @@ export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: Registr
    const { mutate: register, isPending } = useRegister();
    const [error, setError] = useState<string | null>(null);
    const { setAccessToken, setRefreshToken } = useTokenStore();
+   const { mutate: createWorkspace } = useCreateWorkspace();
+
+   const handleCreateWorkspace = async () => {
+      try {
+         const defaultWorkspaceData = {
+            name: 'newSpace',
+            created_by: 0,
+         };
+         await createWorkspace(defaultWorkspaceData, {
+            onSuccess: (newWorkspace) => {
+               console.log('Воркспейс успешно создан:', newWorkspace);
+            },
+            onError: (error) => {
+               console.error('Ошибка при создании воркспейса:', error.message);
+            },
+         });
+      } catch (error) {
+         console.error('Ошибка в handleCreateWorkspace:', error);
+      }
+   };
    const registerForm = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
       defaultValues: {
@@ -57,6 +78,7 @@ export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: Registr
             setError('Ошибка при регистрации');
          },
       });
+      handleCreateWorkspace();
    };
 
    return (

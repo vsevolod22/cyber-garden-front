@@ -16,9 +16,9 @@ interface CreateTaskData {
 interface Task {
    name: string;
    due_date: string;
-   priority: string;
-   desciption: string;
+   description: string;
    status: string;
+   priority: string;
    id: number;
    project_id: number;
    created_by: number;

@@ -6,11 +6,16 @@ import type { AxiosError } from 'axios';
 import { useTaskStore } from '@/modules/Task/model/store/TaskStore';
 
 interface Task {
-   id: string;
-   project_id: number;
    name: string;
+   due_date: string;
    description: string;
    status: string;
+   priority: string;
+   id: number;
+   project_id: number;
+   created_by: number;
+   assigned_to: number | null;
+   is_completed: boolean;
    created_at: string;
    updated_at: string;
 }
