@@ -10,7 +10,7 @@ export const SidebarProfile = () => {
             <SidebarProfileMenubar />
             <SidebarMenuItem>
                {/* Уведомления */}
-               <SidebarMenuButton asChild className='relative h-10 px-2.5'>
+               <SidebarMenuButton asChild className='relative h-10 cursor-pointer px-2.5'>
                   <div>
                      <Bell size={24} />
                      <p className='absolute right-1 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary font-medium text-black'>

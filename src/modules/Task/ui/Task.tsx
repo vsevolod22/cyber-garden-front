@@ -68,7 +68,7 @@ export const Task = ({ className }: TaskProps) => {
                      </DropdownMenuItem>
                   ))}
                </TaskCommand>
-               <DatePicker pickerName='Выберите дату напоминаний' svg={<AlarmClock className='mr-2 w-4' />} />
+               <DatePicker pickerName='Выберите дату напоминания' svg={<AlarmClock className='mr-2 w-4' />} />
             </div>
          </CardHeader>
          <CardFooter className='es:h-32 esmob:justify-center flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20'>
