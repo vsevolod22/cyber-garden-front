@@ -13,6 +13,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '@/utils/lib/utils';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
+import { Task } from '@/modules/Task';
 
 const SidebarModalContent = React.forwardRef<
    React.ElementRef<typeof DialogPrimitive.Content>,
@@ -51,12 +52,7 @@ export const SidebarModal = () => {
             </Button>
          </DialogTrigger>
          <SidebarModalContent>
-            <DialogHeader>
-               <DialogTitle>Are you absolutely sure?</DialogTitle>
-               <DialogDescription>
-                  This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-               </DialogDescription>
-            </DialogHeader>
+            <Task />
          </SidebarModalContent>
       </Dialog>
    );

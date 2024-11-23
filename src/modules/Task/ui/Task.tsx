@@ -1,20 +1,21 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Card, CardFooter, CardHeader } from '@/shared/ui/card';
 import { Textarea } from '@/shared/ui/textarea';
-import { AlarmClock, Calendar as CalendarIcon, Flag, Plus, User } from 'lucide-react';
+import { AlarmClock, Calendar as CalendarIcon, Flag, User } from 'lucide-react';
 import { TaskCommand } from './TaskCommand';
-import { ProjectItem, TaskComboBox } from './TaskComboBox';
+import type { ProjectItem } from './TaskComboBox';
+import { TaskComboBox } from './TaskComboBox';
 import { Button } from '@/shared/ui/button';
 import { DatePicker } from './DatePicker';
 import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
-import { ReactNode, useState } from 'react';
-import { CheckboxTask } from './checkBocks';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 
 interface TaskProps {
    className?: string;
 }
 interface flag {
-   id: number;
    flag: ReactNode;
+   id: number;
    priority: string;
 }
 const flags: flag[] = [
@@ -54,55 +55,40 @@ export const Task = ({ className }: TaskProps) => {
    };
 
    return (
-      <div className='mt-14 flex flex-col gap-8'>
-         <h1 className='text-4xl font-bold'>Сегодня</h1>
-         <Card className='px-0 pb-0'>
-            <CardHeader className='esmob:px-2 flex flex-col gap-4 pb-0 pt-0'>
-               <Textarea className='my-4 h-12 border-none text-xl' placeholder='Название задачи' />
-               <Textarea className='h-20 border-none' placeholder='Описание задачи' />
-               <div className='flex flex-wrap gap-2'>
-                  <DatePicker svg={<CalendarIcon className='mr-2 w-4' />} pickerName='Выберите дату выполнения задания' />
-                  <TaskCommand svg={currentFlag.flag} text={currentFlag.priority}>
-                     {flags.map((item) => (
-                        <DropdownMenuItem className='flex' key={item.id} onClick={() => handleFlagSelect(item)}>
-                           {item.flag} {item.priority}
-                        </DropdownMenuItem>
-                     ))}
-                  </TaskCommand>
-                  <DatePicker svg={<AlarmClock className='mr-2 w-4' />} pickerName='Выберите дату напоминаний' />
-               </div>
-            </CardHeader>
-            <CardFooter className='es:h-32 esmob:justify-center flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20'>
-               <div className='esmob:ml-0 ml-5 flex flex-wrap gap-2'>
-                  <TaskComboBox items={projects} />
-                  <TaskComboBox
-                     items={users}
-                     placeholder='Выберите пользователя'
-                     defaultLabel='Пользователь'
-                     svg={<User className='w-4' />}
-                  />
-               </div>
+      <Card className='px-0 pb-0'>
+         <CardHeader className='esmob:px-2 flex flex-col gap-4 pb-0 pt-0'>
+            <Textarea className='my-4 h-12 border-none text-xl' placeholder='Название задачи' />
+            <Textarea className='h-20 border-none' placeholder='Описание задачи' />
+            <div className='flex flex-wrap gap-2'>
+               <DatePicker pickerName='Выберите дату выполнения задания' svg={<CalendarIcon className='mr-2 w-4' />} />
+               <TaskCommand svg={currentFlag.flag} text={currentFlag.priority}>
+                  {flags.map((item) => (
+                     <DropdownMenuItem key={item.id} className='flex' onClick={() => handleFlagSelect(item)}>
+                        {item.flag} {item.priority}
+                     </DropdownMenuItem>
+                  ))}
+               </TaskCommand>
+               <DatePicker pickerName='Выберите дату напоминаний' svg={<AlarmClock className='mr-2 w-4' />} />
+            </div>
+         </CardHeader>
+         <CardFooter className='es:h-32 esmob:justify-center flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20'>
+            <div className='esmob:ml-0 ml-5 flex flex-wrap gap-2'>
+               <TaskComboBox items={projects} />
+               <TaskComboBox
+                  defaultLabel='Пользователь'
+                  items={users}
+                  placeholder='Выберите пользователя'
+                  svg={<User className='w-4' />}
+               />
+            </div>
 
-               <div className='es:mx-5 esmob:mx-0 esmob:justify-center flex gap-2 sm:mr-5 md:ml-5 md:mr-5'>
-                  <Button className='h-12 bg-red-500 hover:bg-red-400'>Отмена</Button>
-                  <Button disabled className='h-12'>
-                     Добавить задачу
-                  </Button>
-               </div>
-            </CardFooter>
-         </Card>
-         <div className='flex flex-col'>
-            <div className='text-xl font-bold'>23 ноября · Сегодня · Суббота</div>
-            <div>
-               <CheckboxTask />
-            </div>
-            <div className='hover:cursor-pointer'>
-               <span className='flex gap-2 text-gray-600'>
-                  <Plus className='text-primary' />
+            <div className='es:mx-5 esmob:mx-0 esmob:justify-center flex gap-2 sm:mr-5 md:ml-5 md:mr-5'>
+               <Button className='h-12 bg-red-500 hover:bg-red-400'>Отмена</Button>
+               <Button disabled className='h-12'>
                   Добавить задачу
-               </span>
+               </Button>
             </div>
-         </div>
-      </div>
+         </CardFooter>
+      </Card>
    );
 };
