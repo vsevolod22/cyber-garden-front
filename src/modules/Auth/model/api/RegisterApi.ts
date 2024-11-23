@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import { IAuthResponse } from './types';
 import { AxiosError } from 'axios';
 import { api } from '@/shared/api/axios-instance';
@@ -8,28 +7,28 @@ import { useTokenStore } from '../store/authStore';
 interface RegisterCredentials {
    email: string;
    password: string;
-   username: string;
+   name: string;
 }
 
 const register = async (credentials: RegisterCredentials): Promise<IAuthResponse> => {
-   const { setToken } = useTokenStore();
    const response = await api.post<IAuthResponse>('/auth/register', {
       ...credentials,
    });
    if (response.status >= 400) {
       throw new Error('Ошибка регистрации');
    }
-   setToken(response.data.access_token); // Сохраняем токен
    return response.data;
 };
 
-// Хук для выполнения мутации регистрации
 export const useRegister = () => {
+   const { setAccessToken, setRefreshToken } = useTokenStore();
+
    return useMutation<IAuthResponse, AxiosError, RegisterCredentials>({
-      mutationFn: register, // Передаем функцию регистрации
+      mutationFn: register,
       onSuccess: (data) => {
          console.log('Успешная регистрация', data);
-         // Вы можете вызвать обновление данных пользователя или другие действия
+         setAccessToken(data.access_token);
+         setRefreshToken(data.refresh_token);
       },
       onError: (error) => {
          console.error('Ошибка при регистрации:', error.message);

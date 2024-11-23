@@ -2,22 +2,30 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface TokenState {
-   token: string | null;
-   setToken: (token: string | null) => void;
-   clearToken: () => void;
+   accessToken: string | null;
+   refreshToken: string | null;
+   setAccessToken: (token: string | null) => void;
+   setRefreshToken: (token: string | null) => void;
+   clearAccessToken: () => void;
+   clearRefreshToken: () => void;
 }
 
 export const useTokenStore = create(
    persist<TokenState>(
       (set) => ({
-         token: null,
-         setToken: (token: string | null) => {
-            set({ token });
-            token ? localStorage.setItem('token', token) : localStorage.removeItem('token');
+         accessToken: null,
+         refreshToken: null,
+         setAccessToken: (token: string | null) => {
+            set({ accessToken: token });
          },
-         clearToken: () => {
-            set({ token: null });
-            localStorage.removeItem('token');
+         setRefreshToken: (token: string | null) => {
+            set({ refreshToken: token });
+         },
+         clearAccessToken: () => {
+            set({ accessToken: null });
+         },
+         clearRefreshToken: () => {
+            set({ refreshToken: null });
          },
       }),
       {

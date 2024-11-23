@@ -2,8 +2,14 @@ import { CalendarCheck, ChartNoAxesColumnIncreasing, Settings, User } from 'luci
 
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from '@/shared/ui/menubar';
 import { SidebarMenuButton, SidebarMenuItem } from '@/shared/ui/sidebar';
+import { useTokenStore } from '@/modules/Auth/model/store/authStore';
 
 export const SidebarProfileMenubar = () => {
+   const { clearAccessToken, clearRefreshToken } = useTokenStore();
+   const clearStorage = () => {
+      clearAccessToken();
+      clearRefreshToken();
+   };
    return (
       <Menubar className='h-10 flex-1 border-none bg-sidebar shadow-none hover:bg-accent'>
          <MenubarMenu>
@@ -30,7 +36,9 @@ export const SidebarProfileMenubar = () => {
                   <Settings size={16} />
                   Настройки
                </MenubarItem>
-               <MenubarItem className='flex cursor-pointer gap-1.5 font-medium text-red-500'>Выйти</MenubarItem>
+               <MenubarItem onClick={clearStorage} className='flex cursor-pointer gap-1.5 font-medium text-red-500'>
+                  Выйти
+               </MenubarItem>
             </MenubarContent>
          </MenubarMenu>
       </Menubar>

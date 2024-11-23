@@ -8,10 +8,11 @@ import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
 import { Title } from '@/shared/ui/title';
 import { useState } from 'react';
+import { useTokenStore } from '../model/store/authStore';
 
 const registerSchema = loginSchema
    .extend({
-      username: z.string().min(3, { message: 'Имя пользователя должно быть не менее 3 символов' }),
+      name: z.string().min(3, { message: 'Имя пользователя должно быть не менее 3 символов' }),
       confirmPassword: z.string().min(2, { message: 'Пароль должен быть не менее 8 символов' }),
    })
    .refine((data) => data.password === data.confirmPassword, {
@@ -26,23 +27,24 @@ interface RegistrationFormProps {
 export const RegistrationForm = ({ toggleOpenStatus }: RegistrationFormProps) => {
    const { mutate: register } = useRegister();
    const [error, setError] = useState<string | null>(null);
-
+   const { setAccessToken, setRefreshToken } = useTokenStore();
    const registerForm = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
       defaultValues: {
          email: '',
          password: '',
-         username: '',
+         name: '',
          confirmPassword: '',
       },
    });
 
    const onSubmit = (values: z.infer<typeof registerSchema>) => {
       const filteredValues = { ...values };
-      //   delete filteredValues.confirmPassword;
+      delete filteredValues.confirmPassword;
       register(values, {
          onSuccess: (data) => {
-            localStorage.setItem('token', data.access_token);
+            setAccessToken(data.access_token);
+            setRefreshToken(data.refresh_token);
             toggleOpenStatus(false);
          },
          onError: () => {
@@ -78,7 +80,7 @@ export const RegistrationForm = ({ toggleOpenStatus }: RegistrationFormProps) =>
                   </FormItem>
                )}
                control={registerForm.control}
-               name='username'
+               name='name'
             />
             <FormField
                render={({ field }) => (

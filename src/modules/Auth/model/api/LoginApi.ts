@@ -12,10 +12,11 @@ interface LoginCredentials {
 }
 
 const login = async (credentials: LoginCredentials): Promise<IAuthResponse> => {
-   const { setToken } = useTokenStore(); // Zustand для управления состояниями
    const response = await api.post<IAuthResponse>(
-      `/auth/login?email=${credentials.email}&password=${credentials.password}`,
-
+      `/auth/login`,
+      {
+         ...credentials,
+      },
       {
          headers: {
             Accept: 'application/json',
@@ -27,28 +28,17 @@ const login = async (credentials: LoginCredentials): Promise<IAuthResponse> => {
       throw new Error('Ошибка авторизации');
    }
 
-   setToken(response.data.access_token);
    return response.data;
-};
-
-const ping = async () => {
-   const response = await api.get<IAuthResponse>(`/ping`);
-
-   return response.data;
-};
-
-export const usePing = () => {
-   return useQuery({
-      queryKey: ['ping'],
-      queryFn: ping,
-   });
 };
 
 export const useLogin = () => {
+   const { setAccessToken, setRefreshToken } = useTokenStore();
    return useMutation<IAuthResponse, AxiosError, LoginCredentials>({
       mutationFn: login,
       onSuccess: (data) => {
          console.log('Успешный вход в систему', data);
+         setAccessToken(data.access_token);
+         setRefreshToken(data.refresh_token);
       },
       onError: (error) => {
          console.error('Ошибка при входе в систему:', error);

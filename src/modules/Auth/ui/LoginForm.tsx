@@ -7,6 +7,7 @@ import { Input } from '@/shared/ui/input';
 import { useState } from 'react';
 import { Button } from '@/shared/ui/button';
 import { Title } from '@/shared/ui/title';
+import { useTokenStore } from '../model/store/authStore';
 
 export const loginSchema = z.object({
    email: z.string().email({ message: 'Некорректный email' }),
@@ -18,6 +19,7 @@ interface LoginFormProps {
 }
 
 export const LoginForm = ({ toggleOpenStatus }: LoginFormProps) => {
+   const { setAccessToken, setRefreshToken } = useTokenStore();
    const { mutate: login } = useLogin();
    const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +34,8 @@ export const LoginForm = ({ toggleOpenStatus }: LoginFormProps) => {
    const onLoginSubmit = (values: z.infer<typeof loginSchema>) => {
       login(values, {
          onSuccess: (data) => {
-            localStorage.setItem('token', data.access_token);
+            setAccessToken(data.access_token);
+            setRefreshToken(data.refresh_token);
             toggleOpenStatus(false);
          },
          onError: () => {
