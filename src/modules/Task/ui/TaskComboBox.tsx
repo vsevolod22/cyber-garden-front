@@ -7,15 +7,16 @@ import { cn } from '@/utils/lib/utils';
 
 // Типы проекта
 export interface ProjectItem {
+   children?: ProjectItem[];
    label: string;
    value: string;
-   children?: ProjectItem[];
 }
 
 interface TaskComboBoxProps {
+   className?: string;
+   defaultLabel?: string;
    items: ProjectItem[];
    placeholder?: string;
-   defaultLabel?: string;
    svg?: React.ReactNode;
    onSelect?: (selectedValue: string, selectedLabel: string) => void;
 }
@@ -52,9 +53,9 @@ const renderItems = (
          return (
             <CommandItem
                key={item.value}
+               className='flex justify-between'
                value={item.value}
                onSelect={() => onSelect(item.value, item.label)}
-               className='flex justify-between'
             >
                {item.label}
                <Check className={cn('ml-auto', selectedValue === item.value ? 'opacity-100' : 'opacity-0')} />
@@ -66,6 +67,7 @@ const renderItems = (
 
 export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
    items,
+   className,
    placeholder = 'Найти проект...',
    defaultLabel = 'Проект',
    svg = <FolderOpenDot className='w-4' />,
@@ -92,8 +94,8 @@ export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
 
    return (
       <Popover open={open} onOpenChange={setOpen}>
-         <PopoverTrigger asChild>
-            <Button variant='outline' role='combobox' aria-expanded={open} className='h-8 min-w-[120px] justify-between gap-2'>
+         <PopoverTrigger asChild className={className}>
+            <Button aria-expanded={open} className='h-8 min-w-[120px] justify-between gap-2' role='combobox' variant='outline'>
                {svg}
                {label}
                <ChevronDown className='opacity-50' />
@@ -102,7 +104,7 @@ export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
          <PopoverContent className='w-[250px] p-0'>
             <Command inputValue={inputValue} onInputValueChange={setInputValue}>
                <div className='flex items-center border-b px-3' cmdk-input-wrapper=''>
-                  <CommandInput placeholder={placeholder} className='h-9' />
+                  <CommandInput className='h-9' placeholder={placeholder} />
                </div>
                <CommandList>
                   {filteredProjects.length > 0 ? (

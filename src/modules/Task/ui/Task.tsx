@@ -57,7 +57,7 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
 
    return (
       <Card className='px-0 pb-0'>
-         <CardHeader className='esmob:px-2 flex flex-col gap-4 pb-0 pt-0'>
+         <CardHeader className='esmob:px-2 flex gap-4 pb-0 pt-0 md:flex-col'>
             <Textarea className='my-4 h-12 border-none text-xl' placeholder='Название задачи' />
             <Textarea className='h-20 border-none' placeholder='Описание задачи' />
             <div className='flex flex-wrap gap-2'>
@@ -72,7 +72,7 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
                <DatePicker pickerName='Выберите дату напоминания' svg={<AlarmClock className='mr-2 w-4' />} />
             </div>
          </CardHeader>
-         <CardFooter className='es:h-32 esmob:justify-center flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20'>
+         <CardFooter className='esmob:justify-center lg:h-22 flex flex-wrap items-center justify-between gap-4 border-t py-3'>
             <div className='esmob:ml-0 ml-5 flex flex-wrap gap-2'>
                <TaskComboBox items={projects} />
                <TaskComboBox

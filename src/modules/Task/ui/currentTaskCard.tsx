@@ -11,6 +11,7 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { CreateTaskModal } from './CreateTaskModal';
 import { Task } from './Task';
+import { Title } from '@/shared/ui/title';
 
 interface currentTaskCardProps {
    className?: string;
@@ -63,16 +64,16 @@ export const CurrentTaskCard = ({ className }: currentTaskCardProps) => {
             Учеба 📚
          </CardHeader>
          <CardContent className='esmob:px-2 flex gap-4 pb-0 pt-0'>
-            <div className='esmob:px-2 flex flex-col gap-4 pb-0 pt-0'>
+            <div className='esmob:px-2 flex flex-1 flex-col gap-4 pb-0 pt-0'>
                <h2 className='text-xl'>Выйграть хакатон</h2>
                <div>Описание задачи</div>
                {closeSubTuskCreate ? (
                   <Task setButtonClick={() => setCloseSubTuskCreate(false)} />
                ) : (
                   <Button
-                     onClick={() => setCloseSubTuskCreate(true)}
                      className={'my-4 flex h-10 w-full justify-start text-base font-medium'}
                      variant='ghost'
+                     onClick={() => setCloseSubTuskCreate(true)}
                   >
                      <div className='flex gap-2'>
                         <Plus className='text-primary' />
@@ -81,22 +82,34 @@ export const CurrentTaskCard = ({ className }: currentTaskCardProps) => {
                   </Button>
                )}
 
-               <div className='flex flex-wrap gap-2'>
+               <div className='flex flex-wrap gap-2'></div>
+            </div>
+            {/* Проект
+               Срок
+               Напоминания
+               Приоритет */}
+            <div className='min-w-80 bg-accent p-4'>
+               <div className='flex w-full min-w-72 flex-col gap-3'>
+                  <Title className='font-medium' text='Проект' />
+                  <TaskComboBox className='w-full' items={projects} />
+                  <Title className='font-medium' text='Срок' />
                   <DatePicker pickerName='Выберите дату выполнения задания' svg={<CalendarIcon className='mr-2 w-4' />} />
-                  <TaskCommand svg={currentFlag.flag} text={currentFlag.priority}>
+                  <Title className='font-medium' text='Приоритет' />
+                  <TaskCommand slot className='flex w-full justify-between' svg={currentFlag.flag} text={currentFlag.priority}>
                      {flags.map((item) => (
                         <DropdownMenuItem key={item.id} className='flex' onClick={() => handleFlagSelect(item)}>
                            {item.flag} {item.priority}
                         </DropdownMenuItem>
                      ))}
                   </TaskCommand>
-                  <DatePicker pickerName='Выберите дату напоминаний' svg={<AlarmClock className='mr-2 w-4' />} />
-               </div>
-            </div>
-            <div className='min-w-60'>
-               <div>
-                  <span></span>
-                  <div></div>
+                  <Title className='font-medium' text='Напоминание' />
+                  <DatePicker
+                     className='w-full'
+                     pickerName='Выберите дату напоминаний'
+                     svg={<AlarmClock className='mr-2 w-4' />}
+                  />
+                  <Title className='font-medium' text='Комментарий' />
+                  <Textarea />
                </div>
             </div>
          </CardContent>
