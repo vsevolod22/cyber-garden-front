@@ -57,10 +57,10 @@ export const Task = ({ className }: TaskProps) => {
       <div className='mt-14 flex flex-col gap-8'>
          <h1 className='text-4xl font-bold'>Сегодня</h1>
          <Card className='px-0 pb-0'>
-            <CardHeader className='flex flex-col gap-4 pb-0 pt-0'>
+            <CardHeader className='esmob:px-2 flex flex-col gap-4 pb-0 pt-0'>
                <Textarea className='my-4 h-12 border-none text-xl' placeholder='Название задачи' />
                <Textarea className='h-20 border-none' placeholder='Описание задачи' />
-               <div className='flex gap-2'>
+               <div className='flex flex-wrap gap-2'>
                   <DatePicker svg={<CalendarIcon className='mr-2 w-4' />} pickerName='Выберите дату выполнения задания' />
                   <TaskCommand svg={currentFlag.flag} text={currentFlag.priority}>
                      {flags.map((item) => (
@@ -72,8 +72,8 @@ export const Task = ({ className }: TaskProps) => {
                   <DatePicker svg={<AlarmClock className='mr-2 w-4' />} pickerName='Выберите дату напоминаний' />
                </div>
             </CardHeader>
-            <CardFooter className='flex h-20 items-center justify-between border-t'>
-               <div className='ml-5 flex gap-2'>
+            <CardFooter className='es:h-32 esmob:justify-center flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20'>
+               <div className='esmob:ml-0 ml-5 flex flex-wrap gap-2'>
                   <TaskComboBox items={projects} />
                   <TaskComboBox
                      items={users}
@@ -83,7 +83,7 @@ export const Task = ({ className }: TaskProps) => {
                   />
                </div>
 
-               <div className='mr-5 flex gap-2'>
+               <div className='es:mx-5 esmob:mx-0 esmob:justify-center flex gap-2 sm:mr-5 md:ml-5 md:mr-5'>
                   <Button className='h-12 bg-red-500 hover:bg-red-400'>Отмена</Button>
                   <Button disabled className='h-12'>
                      Добавить задачу
