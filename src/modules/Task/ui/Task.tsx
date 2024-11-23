@@ -57,11 +57,11 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
 
    return (
       <Card className='px-0 pb-0'>
-         <CardHeader className='esmob:px-2 flex gap-4 pb-0 pt-0 md:flex-col'>
+         <CardHeader className='flex gap-4 pb-0 pt-0 md:flex-col esmob:px-2'>
             <Textarea className='my-4 h-12 border-none text-xl' placeholder='Название задачи' />
             <Textarea className='h-20 border-none' placeholder='Описание задачи' />
             <div className='flex flex-wrap gap-2'>
-               <DatePicker pickerName='Выберите дату выполнения задания' svg={<CalendarIcon className='mr-2 w-4' />} />
+               <DatePicker pickerName='Выберите дату выполнения задачи' svg={<CalendarIcon className='mr-2 w-4' />} />
                <TaskCommand svg={currentFlag.flag} text={currentFlag.priority}>
                   {flags.map((item) => (
                      <DropdownMenuItem key={item.id} className='flex' onClick={() => handleFlagSelect(item)}>
@@ -72,8 +72,8 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
                <DatePicker pickerName='Выберите дату напоминания' svg={<AlarmClock className='mr-2 w-4' />} />
             </div>
          </CardHeader>
-         <CardFooter className='esmob:justify-center lg:h-22 flex flex-wrap items-center justify-between gap-4 border-t py-3'>
-            <div className='esmob:ml-0 ml-5 flex flex-wrap gap-2'>
+         <CardFooter className='lg:h-22 flex flex-wrap items-center justify-between gap-4 border-t py-3 esmob:justify-center'>
+            <div className='ml-5 flex flex-wrap gap-2 esmob:ml-0'>
                <TaskComboBox items={projects} />
                <TaskComboBox
                   defaultLabel='Исполнитель'
@@ -83,7 +83,7 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
                />
             </div>
 
-            <div className='es:mx-5 esmob:mx-0 esmob:justify-center flex gap-2 sm:mr-5 md:ml-5 md:mr-5'>
+            <div className='flex gap-2 sm:mr-5 md:ml-5 md:mr-5 es:mx-5 esmob:mx-0 esmob:justify-center'>
                <Button variant={'ghost'} onClick={setButtonClick ? () => setButtonClick(false) : undefined}>
                   Отмена
                </Button>

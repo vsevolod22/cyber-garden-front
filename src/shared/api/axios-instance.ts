@@ -1,4 +1,5 @@
 import { refreshTokenRequest } from '@/modules/Auth/model/api/refreshTokenRequest';
+import { useTokenStore } from '@/modules/Auth/model/store/authStore';
 import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import axios, { AxiosRequestConfig } from 'axios';
 import * as decode from 'jwt-decode'; // Импортируем как модуль
@@ -12,9 +13,10 @@ const api: AxiosInstance = axios.create({
 });
 
 const onRequest = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-   const token = localStorage.getItem('token');
-   if (token && !config.url?.includes('auth')) {
-      const decodedToken: { exp: number } = decode.jwtDecode(token); // Используем decode.default
+   const { accessToken } = useTokenStore();
+
+   if (accessToken && !config.url?.includes('auth')) {
+      const decodedToken: { exp: number } = decode.jwtDecode(accessToken); // Используем decode.default
 
       const currentDate = new Date();
       // console.log(decodedToken.exp * 1000 < currentDate.getTime())
@@ -26,7 +28,7 @@ const onRequest = async (config: InternalAxiosRequestConfig): Promise<InternalAx
             config.headers.set('Authorization', `Bearer ${newToken}`);
          }
       } else {
-         config.headers.set('Authorization', `Bearer ${token}`);
+         config.headers.set('Authorization', `Bearer ${accessToken}`);
       }
    }
    return config;
