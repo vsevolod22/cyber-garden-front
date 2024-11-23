@@ -12,7 +12,7 @@ const BaseLayout = () => {
          <SidebarInset>
             <div className='h-screen bg-background'>
                <Header />
-               <div>
+               <div className='px-6'>
                   <Outlet />
                </div>
                <Footer />

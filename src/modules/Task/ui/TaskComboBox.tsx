@@ -6,27 +6,20 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { cn } from '@/utils/lib/utils';
 
 // Типы проекта
-interface ProjectItem {
+export interface ProjectItem {
    label: string;
    value: string;
    children?: ProjectItem[];
 }
 
-// Данные
-const projects: ProjectItem[] = [
-   { label: 'Входящие', value: 'inbox' },
-   {
-      label: 'Мои проекты',
-      value: 'my-projects',
-      children: [
-         { label: 'Учеба 📚', value: 'Учёба' },
-         { label: 'Рутины 🌀', value: 'Рутины' },
-         { label: 'Вдохновение ✨', value: 'Вдохновение' },
-      ],
-   },
-];
+interface TaskComboBoxProps {
+   items: ProjectItem[];
+   placeholder?: string;
+   defaultLabel?: string;
+   svg?: React.ReactNode;
+   onSelect?: (selectedValue: string, selectedLabel: string) => void;
+}
 
-// Рекурсивная функция фильтрации проектов
 const filterProjects = (items: ProjectItem[], query: string): ProjectItem[] => {
    return items
       .map((item) => {
@@ -43,7 +36,6 @@ const filterProjects = (items: ProjectItem[], query: string): ProjectItem[] => {
       .filter((item): item is ProjectItem => item !== null);
 };
 
-// Рекурсивный рендеринг элементов
 const renderItems = (
    items: ProjectItem[],
    selectedValue: string,
@@ -72,34 +64,37 @@ const renderItems = (
    });
 };
 
-// Основной компонент
-export const TaskComboBox: React.FC = () => {
+export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
+   items,
+   placeholder = 'Найти проект...',
+   defaultLabel = 'Проект',
+   svg = <FolderOpenDot className='w-4' />,
+   onSelect,
+}) => {
    const [open, setOpen] = React.useState(false);
    const [inputValue, setInputValue] = React.useState('');
    const [value, setValue] = React.useState('');
-   const [label, setLabel] = React.useState('Проект');
+   const [label, setLabel] = React.useState(defaultLabel);
 
    const handleSelect = (selectedValue: string, selectedLabel: string) => {
       setValue(selectedValue);
       setLabel(selectedLabel);
-      setInputValue(''); // Сброс строки поиска
+      setInputValue('');
       setOpen(false);
+      if (onSelect) {
+         onSelect(selectedValue, selectedLabel);
+      }
    };
 
    const filteredProjects = React.useMemo(() => {
-      return filterProjects(projects, inputValue);
-   }, [inputValue]);
+      return filterProjects(items, inputValue);
+   }, [items, inputValue]);
 
    return (
       <Popover open={open} onOpenChange={setOpen}>
          <PopoverTrigger asChild>
-            <Button
-               variant='outline'
-               role='combobox'
-               aria-expanded={open}
-               className='ml-5 h-8 min-w-[120px] justify-between gap-2'
-            >
-               <FolderOpenDot className='w-4' />
+            <Button variant='outline' role='combobox' aria-expanded={open} className='h-8 min-w-[120px] justify-between gap-2'>
+               {svg}
                {label}
                <ChevronDown className='opacity-50' />
             </Button>
@@ -107,7 +102,7 @@ export const TaskComboBox: React.FC = () => {
          <PopoverContent className='w-[250px] p-0'>
             <Command inputValue={inputValue} onInputValueChange={setInputValue}>
                <div className='flex items-center border-b px-3' cmdk-input-wrapper=''>
-                  <CommandInput placeholder='Найти проект...' className='h-9' />
+                  <CommandInput placeholder={placeholder} className='h-9' />
                </div>
                <CommandList>
                   {filteredProjects.length > 0 ? (
