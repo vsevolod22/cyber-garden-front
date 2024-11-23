@@ -13,18 +13,28 @@ const api: AxiosInstance = axios.create({
 });
 
 const onRequest = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-   const { accessToken } = useTokenStore();
+   // Извлекаем токены напрямую из localStorage
+   const accessToken = localStorage.getItem('token-storage')
+      ? JSON.parse(localStorage.getItem('token-storage') || '{}').accessToken
+      : null;
 
    if (accessToken && !config.url?.includes('auth')) {
-      const decodedToken: { exp: number } = decode.jwtDecode(accessToken); // Используем decode.default
+      const decodedToken: { exp: number } = decode.jwtDecode(accessToken);
 
       const currentDate = new Date();
-      // console.log(decodedToken.exp * 1000 < currentDate.getTime())
-      // console.log(decodedToken.exp * 1000 )
-      // console.log(currentDate.getTime())
       if (decodedToken.exp * 1000 - 518000 < currentDate.getTime()) {
          const newToken = await refreshTokenRequest();
          if (newToken) {
+            // Сохраняем новый токен в localStorage для последующего использования
+            const storedTokens = JSON.parse(localStorage.getItem('token-storage') || '{}');
+            localStorage.setItem(
+               'token-storage',
+               JSON.stringify({
+                  ...storedTokens,
+                  accessToken: newToken,
+               }),
+            );
+
             config.headers.set('Authorization', `Bearer ${newToken}`);
          }
       } else {
