@@ -28,23 +28,22 @@ interface RegistrationFormProps {
 }
 
 export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: RegistrationFormProps) => {
-   const { mutateAsync: register, isPending, isSuccess } = useRegister();
+   const { mutateAsync: register, isPending } = useRegister();
    const [error, setError] = useState<string | null>(null);
-   const { setAccessToken, setRefreshToken, accessToken } = useTokenStore();
+   const { setAccessToken, setRefreshToken } = useTokenStore();
    const { mutate: createWorkspace } = useCreateWorkspace();
+
    useEffect(() => {
-      console.log(isSuccess);
-      if (isSuccess) {
-         console.log(isSuccess);
-         handleCreateWorkspace();
-      }
-   }, [isSuccess]);
+      setLoadingStatus(isPending);
+   }, [isPending]);
+
    const handleCreateWorkspace = async () => {
       try {
          const defaultWorkspaceData = {
             name: 'newSpace',
             created_by: 0,
          };
+
          await createWorkspace(defaultWorkspaceData, {
             onSuccess: (newWorkspace) => {
                console.log('Воркспейс успешно создан:', newWorkspace);
@@ -57,6 +56,7 @@ export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: Registr
          console.error('Ошибка в handleCreateWorkspace:', error);
       }
    };
+
    const registerForm = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
       defaultValues: {
@@ -67,13 +67,9 @@ export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: Registr
       },
    });
 
-   useEffect(() => {
-      setLoadingStatus(isPending);
-   }, [isPending]);
    const onSubmit = async (values: z.infer<typeof registerSchema>) => {
       try {
          const data = await register(values);
-         console.log('DA');
          setAccessToken(data.access_token);
          setRefreshToken(data.refresh_token);
          toggleOpenStatus(false);

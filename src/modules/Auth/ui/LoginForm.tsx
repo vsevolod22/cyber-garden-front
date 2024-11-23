@@ -9,6 +9,7 @@ import { Button } from '@/shared/ui/button';
 import { Title } from '@/shared/ui/title';
 import { useTokenStore } from '../model/store/authStore';
 import { Loader } from '@/shared/ui/loader';
+import TelegramLoginButton from './telegrammBtn';
 import { useFetchWorkspacesAsync } from '@/modules/WorkSpaces/model/api/workSpacesGet';
 
 export const loginSchema = z.object({

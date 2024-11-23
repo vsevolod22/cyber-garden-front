@@ -1,13 +1,14 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import type { UseQueryOptions } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api/axios-instance';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 import { useWorkspaceStore } from '../store/workSpaceStore';
 
 interface IWorkspace {
-   name: string;
-   id: number;
-   created_by: number;
    created_at: string;
+   created_by: number;
+   id: number;
+   name: string;
    updated_at: string;
 }
 

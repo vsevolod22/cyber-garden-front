@@ -2,21 +2,21 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface Workspace {
-   name: string;
-   id: number;
-   created_by: number;
    created_at: string;
+   created_by: number;
+   id: number;
+   name: string;
    updated_at: string;
 }
 
 interface WorkspaceState {
    workspaces: Workspace[];
-   setWorkspaces: (workspaces: Workspace[]) => void; // Установить список рабочих пространств
    addWorkspace: (workspace: Workspace) => void; // Добавить рабочее пространство
-   updateWorkspace: (updatedWorkspace: Workspace) => void; // Обновить рабочее пространство
-   removeWorkspace: (id: number) => void; // Удалить рабочее пространство по ID
    clearWorkspaces: () => void; // Очистить список рабочих пространств
    getWorkspaceById: (id: number) => Workspace | undefined; // Получить рабочее пространство по ID
+   removeWorkspace: (id: number) => void; // Удалить рабочее пространство по ID
+   setWorkspaces: (workspaces: Workspace[]) => void; // Установить список рабочих пространств
+   updateWorkspace: (updatedWorkspace: Workspace) => void; // Обновить рабочее пространство
 }
 
 export const useWorkspaceStore = create<WorkspaceState>()(

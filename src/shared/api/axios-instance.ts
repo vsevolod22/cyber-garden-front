@@ -1,8 +1,6 @@
-import { refreshTokenRequest } from '@/modules/Auth/model/api/refreshTokenRequest';
 import { useTokenStore } from '@/modules/Auth/model/store/authStore';
 import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import axios, { AxiosRequestConfig } from 'axios';
-import * as decode from 'jwt-decode'; // Импортируем как модуль
+import axios from 'axios';
 
 const api: AxiosInstance = axios.create({
    baseURL: 'https://cybergarden.leganyst.ru',

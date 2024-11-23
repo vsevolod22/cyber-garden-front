@@ -1,14 +1,14 @@
 // useRegister.ts
 import { useMutation } from '@tanstack/react-query';
-import { IAuthResponse } from './types';
-import { AxiosError } from 'axios';
+import type { IAuthResponse } from './types';
+import type { AxiosError } from 'axios';
 import { api } from '@/shared/api/axios-instance';
 import { useTokenStore } from '../store/authStore';
 
 interface RegisterCredentials {
    email: string;
-   password: string;
    name: string;
+   password: string;
 }
 
 const register = async (credentials: RegisterCredentials): Promise<IAuthResponse> => {

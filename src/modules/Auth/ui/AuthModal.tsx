@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/shared/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
@@ -19,9 +18,6 @@ export function AuthModal({ className, authModalMode = 'login' }: AuthModalProps
    const [open, setOpen] = useState(false);
    const { accessToken, clearAccessToken, clearRefreshToken } = useTokenStore();
 
-   const handleBot = (user: any) => {
-      console.log(user);
-   };
    const toggleOpenStatus = (status: boolean) => {
       setOpen(status);
    };
@@ -69,10 +65,10 @@ export function AuthModal({ className, authModalMode = 'login' }: AuthModalProps
                         <TelegramLoginButton
                            botName='bigas_notification_bot' // Имя вашего бота
                            buttonSize='large' // Размер кнопки
-                           cornerRadius={3} // Радиус скругления
-                           usePic={false} // Показывать ли фото пользователя
-                           dataAuthUrl='https://cybergarden.leganyst.ru/auth/telegram' // Укажите ваш реальный домен здесь
                            className='h-4 bg-blue-400'
+                           cornerRadius={3} // Радиус скругления
+                           dataAuthUrl='https://cybergarden.leganyst.ru/auth/telegram' // Укажите ваш реальный домен здесь
+                           usePic={false} // Показывать ли фото пользователя
                         />
                      </TabsContent>
                      <TabsContent value='register'>

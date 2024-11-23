@@ -3,9 +3,9 @@ export interface IAuthResponse {
    refresh_token: string;
 }
 export interface IUser {
-   name: string;
+   created_at: string;
    email: string;
    id: number;
-   created_at: string;
+   name: string;
    updated_at: string;
 }
