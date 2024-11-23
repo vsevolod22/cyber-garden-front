@@ -5,8 +5,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { RegistrationForm } from './RegistrationForm';
 import { LoginForm } from './LoginForm';
 import { useTokenStore } from '../model/store/authStore';
+import { cn } from '@/utils/lib/utils';
 
-export function AuthModal() {
+interface AuthModalProps {
+   authModalMode?: 'login' | 'register';
+   className?: string;
+}
+
+export function AuthModal({ className, authModalMode = 'login' }: AuthModalProps) {
+   const [isLoading, setisLoading] = useState(false);
    const [open, setOpen] = useState(false);
    const { accessToken, clearAccessToken, clearRefreshToken } = useTokenStore();
    const toggleOpenStatus = (status: boolean) => {
@@ -18,37 +25,44 @@ export function AuthModal() {
       setOpen(false);
    };
 
+   const setLoadingStatus = (status: boolean) => {
+      setisLoading(status);
+   };
+
    return (
       <>
          {accessToken ? (
-            <Button onClick={clearStorage} className='flex gap-2' size='small' variant='secondary'>
-               {' '}
+            <Button className='flex gap-2' size='small' variant='secondary' onClick={clearStorage}>
                Выйти
             </Button>
          ) : (
             <Dialog open={open} onOpenChange={setOpen}>
                <DialogTrigger asChild>
-                  <Button className='flex gap-2' size='small' variant='secondary'>
-                     Вход
+                  <Button className={cn(className, 'flex gap-2')} size='small' variant='secondary'>
+                     {authModalMode === 'login' && 'Вход'}
+                     {authModalMode === 'register' && 'Регистрация'}
                   </Button>
                </DialogTrigger>
-               <Tabs defaultValue={'login'}>
+
+               <Tabs defaultValue={authModalMode}>
                   <DialogContent aria-describedby='dialog-description' className='flex flex-col sm:max-w-md'>
                      <DialogHeader className='h-6'>
-                        <TabsList className=''>
-                           <TabsTrigger className='hover:bg-background' value='login'>
-                              Авторизация
-                           </TabsTrigger>
-                           <TabsTrigger className='hover:bg-background' value='register'>
-                              Регистрация
-                           </TabsTrigger>
-                        </TabsList>
+                        {!isLoading && (
+                           <TabsList className=''>
+                              <TabsTrigger className='hover:bg-background' value='login'>
+                                 Авторизация
+                              </TabsTrigger>
+                              <TabsTrigger className='hover:bg-background' value='register'>
+                                 Регистрация
+                              </TabsTrigger>
+                           </TabsList>
+                        )}
                      </DialogHeader>
                      <TabsContent value='login'>
-                        <LoginForm toggleOpenStatus={toggleOpenStatus} />
+                        <LoginForm setLoadingStatus={setLoadingStatus} toggleOpenStatus={toggleOpenStatus} />
                      </TabsContent>
                      <TabsContent value='register'>
-                        <RegistrationForm toggleOpenStatus={toggleOpenStatus} />
+                        <RegistrationForm setLoadingStatus={setLoadingStatus} toggleOpenStatus={toggleOpenStatus} />
                      </TabsContent>
                   </DialogContent>
                </Tabs>

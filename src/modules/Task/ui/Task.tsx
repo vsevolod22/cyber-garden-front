@@ -31,8 +31,8 @@ const users: ProjectItem[] = [
       value: 'users',
       children: [
          { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)' },
-         { label: 'Рутины 🌀', value: 'Рутины' },
-         { label: 'Вдохновение ✨', value: 'Вдохновение' },
+         { label: 'Макарычев И.И. (makar@gmail.com)', value: 'Макарычев И.И. (makar@gmail.com)' },
+         { label: 'Марков А.П. (markov@gmail.com)', value: 'Марков А.П. (markov@gmail.com)' },
       ],
    },
 ];
@@ -42,9 +42,9 @@ const projects: ProjectItem[] = [
       label: 'Мои проекты',
       value: 'my-projects',
       children: [
-         { label: 'Учеба 📚', value: 'Учёба' },
-         { label: 'Рутины 🌀', value: 'Рутины' },
-         { label: 'Вдохновение ✨', value: 'Вдохновение' },
+         { label: 'Хакатон 🤯', value: 'Учёба' },
+         { label: 'Школа 👻', value: 'Рутины' },
+         { label: 'Домашние заботы 🧸', value: 'Вдохновение' },
       ],
    },
 ];
@@ -84,15 +84,10 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
             </div>
 
             <div className='es:mx-5 esmob:mx-0 esmob:justify-center flex gap-2 sm:mr-5 md:ml-5 md:mr-5'>
-               <Button
-                  onClick={setButtonClick ? () => setButtonClick(false) : undefined}
-                  className='h-12 bg-red-500 hover:bg-red-400'
-               >
+               <Button variant={'ghost'} onClick={setButtonClick ? () => setButtonClick(false) : undefined}>
                   Отмена
                </Button>
-               <Button disabled className='h-12'>
-                  Добавить задачу
-               </Button>
+               <Button disabled>Добавить задачу</Button>
             </div>
          </CardFooter>
       </Card>

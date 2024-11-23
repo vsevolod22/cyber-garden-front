@@ -35,9 +35,11 @@ export const SidebarProfile = () => {
                         <DropdownMenuTrigger asChild>
                            <div className='relative flex items-center'>
                               <Bell size={24} />
-                              <p className='absolute bottom-3 left-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary font-medium text-black'>
-                                 {reminders.length}
-                              </p>
+                              {!!reminders.length && (
+                                 <p className='absolute bottom-3 left-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary font-medium text-black'>
+                                    {reminders.length}
+                                 </p>
+                              )}
                            </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='start' side='right'>

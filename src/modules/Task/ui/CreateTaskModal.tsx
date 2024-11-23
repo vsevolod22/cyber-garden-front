@@ -65,13 +65,15 @@ export const CreateTaskModal: React.FC<CreateModalProps> = ({
       <Dialog>
          {showButton && (
             <DialogTrigger className='w-full'>
-               <Button
-                  className={cn('my-4 flex h-10 w-full justify-start text-base font-medium', buttonClassName)}
-                  prefix={buttonIcon}
-                  variant='ghost'
-               >
-                  {buttonChildren}
-               </Button>
+               <div>
+                  <Button
+                     className={cn('my-4 flex h-10 w-full justify-start text-base font-medium', buttonClassName)}
+                     prefix={buttonIcon}
+                     variant='ghost'
+                  >
+                     {buttonChildren}
+                  </Button>
+               </div>
             </DialogTrigger>
          )}
          <CreateModalContent

@@ -36,7 +36,7 @@ export const SidebarProfileMenubar = () => {
                   <Settings size={16} />
                   Настройки
                </MenubarItem>
-               <MenubarItem onClick={clearStorage} className='flex cursor-pointer gap-1.5 font-medium text-red-500'>
+               <MenubarItem className='flex cursor-pointer gap-1.5 font-medium text-red-500' onClick={clearStorage}>
                   Выйти
                </MenubarItem>
             </MenubarContent>

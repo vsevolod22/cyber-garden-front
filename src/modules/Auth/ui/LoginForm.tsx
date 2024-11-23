@@ -4,10 +4,11 @@ import { z } from 'zod';
 import { useLogin } from '../model/api/LoginApi';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/shared/ui/button';
 import { Title } from '@/shared/ui/title';
 import { useTokenStore } from '../model/store/authStore';
+import { Loader } from '@/shared/ui/loader';
 
 export const loginSchema = z.object({
    email: z.string().email({ message: 'Некорректный email' }),
@@ -15,13 +16,18 @@ export const loginSchema = z.object({
 });
 
 interface LoginFormProps {
+   setLoadingStatus: (status: boolean) => void;
    toggleOpenStatus: (status: boolean) => void;
 }
 
-export const LoginForm = ({ toggleOpenStatus }: LoginFormProps) => {
+export const LoginForm = ({ toggleOpenStatus, setLoadingStatus }: LoginFormProps) => {
    const { setAccessToken, setRefreshToken } = useTokenStore();
-   const { mutate: login } = useLogin();
+   const { mutate: login, isPending } = useLogin();
    const [error, setError] = useState<string | null>(null);
+
+   useEffect(() => {
+      setLoadingStatus(isPending);
+   }, [isPending]);
 
    const loginForm = useForm<z.infer<typeof loginSchema>>({
       resolver: zodResolver(loginSchema),
@@ -45,40 +51,48 @@ export const LoginForm = ({ toggleOpenStatus }: LoginFormProps) => {
    };
 
    return (
-      <Form {...loginForm}>
-         <form className='space-y-4' onSubmit={loginForm.handleSubmit(onLoginSubmit)}>
-            <FormField
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Email</FormLabel>
-                     <FormControl>
-                        <Input placeholder='Введите email' {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-               control={loginForm.control}
-               name='email'
-            />
+      <>
+         {isPending ? (
+            <div className='flex h-60 w-full items-center justify-center'>
+               <Loader />
+            </div>
+         ) : (
+            <Form {...loginForm}>
+               <form className='space-y-4' onSubmit={loginForm.handleSubmit(onLoginSubmit)}>
+                  <FormField
+                     render={({ field }) => (
+                        <FormItem>
+                           <FormLabel>Email</FormLabel>
+                           <FormControl>
+                              <Input placeholder='Введите email' {...field} />
+                           </FormControl>
+                           <FormMessage />
+                        </FormItem>
+                     )}
+                     control={loginForm.control}
+                     name='email'
+                  />
 
-            <FormField
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Пароль</FormLabel>
-                     <FormControl>
-                        <Input placeholder='Введите пароль' type='password' {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-               control={loginForm.control}
-               name='password'
-            />
-            {error && <Title className='text-red-500' text={error} />}
-            <Button className='w-[160px]' type='submit'>
-               Войти
-            </Button>
-         </form>
-      </Form>
+                  <FormField
+                     render={({ field }) => (
+                        <FormItem>
+                           <FormLabel>Пароль</FormLabel>
+                           <FormControl>
+                              <Input placeholder='Введите пароль' type='password' {...field} />
+                           </FormControl>
+                           <FormMessage />
+                        </FormItem>
+                     )}
+                     control={loginForm.control}
+                     name='password'
+                  />
+                  {error && <Title className='text-red-500' text={error} />}
+                  <Button className='w-[160px]' type='submit'>
+                     Войти
+                  </Button>
+               </form>
+            </Form>
+         )}
+      </>
    );
 };

@@ -83,7 +83,7 @@ export const SidebarAddProject = () => {
                   svg={<User className='w-4' />}
                   onSelect={handleAddUser}
                />
-               <div className='space-y-2'>
+               <div className='max-w-[380px] space-y-2'>
                   {selectedUsers.map((user, index) => (
                      <div key={index} className='flex items-center justify-between rounded bg-gray-100 px-3 py-2'>
                         <p className='text-sm'>{user}</p>

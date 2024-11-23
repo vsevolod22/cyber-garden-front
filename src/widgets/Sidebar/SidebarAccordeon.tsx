@@ -24,18 +24,6 @@ const projectItems = [
    { label: 'Домашние заботы 🧸', value: 'Вдохновение' },
 ];
 
-const users: ProjectItem[] = [
-   {
-      label: 'Пользователи',
-      value: 'users',
-      children: [
-         { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)' },
-         { label: 'Рутины 🌀', value: 'Рутины' },
-         { label: 'Вдохновение ✨', value: 'Вдохновение' },
-      ],
-   },
-];
-
 export const SidebarAccordeon = () => {
    return (
       <Accordion collapsible type='single'>
