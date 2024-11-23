@@ -61,8 +61,7 @@ html {
 
       /*  */
       --primary: 116, 44%, 50%;
-      /* --primary: 0, 0%, 9%;
-      --texture: 116, 44%, 50%; */
+      --primary-hover: 116, 44%, 40%;
       --primary-foreground: 0, 0%, 100%;
       --secondary: 0 0% 100%;
       --secondary-foreground: 0, 0%, 9%;
@@ -111,9 +110,7 @@ html {
 
       /*  */
       --primary: 116, 44%, 50%;
-      /* --primary: 0, 0%, 93%; */
-
-      --primary-hover: 0, 0%, 80%;
+      --primary-hover: 116, 44%, 40%;
       --primary-foreground: 0, 0%, 4%;
       --secondary: 0, 0%, 4%;
       --secondary-foreground: 0 0% 98%;
