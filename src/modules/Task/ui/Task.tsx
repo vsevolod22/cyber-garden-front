@@ -12,6 +12,7 @@ import { useState } from 'react';
 
 interface TaskProps {
    className?: string;
+   setButtonClick?: (close: boolean) => void;
 }
 interface flag {
    flag: ReactNode;
@@ -47,7 +48,7 @@ const projects: ProjectItem[] = [
       ],
    },
 ];
-export const Task = ({ className }: TaskProps) => {
+export const Task = ({ className, setButtonClick }: TaskProps) => {
    const [currentFlag, setCurrentFlag] = useState<flag>(flags[0]); // По умолчанию первый элемент
 
    const handleFlagSelect = (selectedFlag: flag) => {
@@ -83,7 +84,12 @@ export const Task = ({ className }: TaskProps) => {
             </div>
 
             <div className='es:mx-5 esmob:mx-0 esmob:justify-center flex gap-2 sm:mr-5 md:ml-5 md:mr-5'>
-               <Button className='h-12 bg-red-500 hover:bg-red-400'>Отмена</Button>
+               <Button
+                  onClick={setButtonClick ? () => setButtonClick(false) : undefined}
+                  className='h-12 bg-red-500 hover:bg-red-400'
+               >
+                  Отмена
+               </Button>
                <Button disabled className='h-12'>
                   Добавить задачу
                </Button>
