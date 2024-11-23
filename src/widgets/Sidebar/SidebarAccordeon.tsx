@@ -16,11 +16,12 @@ import { SidebarMenuButton } from '@/shared/ui/sidebar';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Ellipsis, EllipsisIcon, LayoutGrid, Plus, User, X } from 'lucide-react';
 import { useState } from 'react';
+import { SidebarAddProject } from './SidebarAddProject';
 
 const projectItems = [
-   { label: 'Учеба 📚', value: 'Учёба' },
-   { label: 'Рутины 🌀', value: 'Рутины' },
-   { label: 'Вдохновение ✨', value: 'Вдохновение' },
+   { label: 'Хакатон 🤯', value: 'Учёба' },
+   { label: 'Школа 👻', value: 'Рутины' },
+   { label: 'Домашние заботы 🧸', value: 'Вдохновение' },
 ];
 
 const users: ProjectItem[] = [
@@ -36,18 +37,6 @@ const users: ProjectItem[] = [
 ];
 
 export const SidebarAccordeon = () => {
-   const [projectName, setProjectName] = useState('');
-   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
-   const handleCreateProject = () => {
-      if (projectName.trim()) {
-         // Логика создания проекта
-         console.log({ projectName });
-         setProjectName('');
-         setDropdownOpen(false); // Закрываем меню
-      }
-   };
-
    return (
       <Accordion collapsible type='single'>
          <AccordionItem className='border-none' value='item-1'>
@@ -58,70 +47,7 @@ export const SidebarAccordeon = () => {
                      Проекты
                   </div>
 
-                  <DropdownMenu open={isDropdownOpen} onOpenChange={setDropdownOpen}>
-                     <DropdownMenuTrigger asChild>
-                        <Button className='h-5 w-5' size='icon' variant='ghost' onClick={(e) => e.stopPropagation()}>
-                           <Plus className='h-5 w-5' />
-                        </Button>
-                     </DropdownMenuTrigger>
-                     <DropdownMenuContent
-                        align='start'
-                        className='w-96 p-4'
-                        side='right'
-                        onClick={(e) => e.stopPropagation()} // Предотвращение всплытия
-                     >
-                        <div className='mb-4 flex items-center justify-between'>
-                           <h3 className='text-lg font-semibold'>Добавить проект</h3>
-                           <Button
-                              className='h-5 w-5'
-                              size='icon'
-                              variant='ghost'
-                              onClick={() => setDropdownOpen(false)} // Закрываем меню
-                           >
-                              <X className='h-5 w-5' />
-                           </Button>
-                        </div>
-                        <DropdownMenuSeparator />
-                        <div className='space-y-4'>
-                           {/* Поле ввода имени проекта */}
-                           <div>
-                              <label className='mb-1 block text-sm font-medium' htmlFor='projectName'>
-                                 Имя проекта
-                              </label>
-                              <Input
-                                 required
-                                 id='projectName'
-                                 placeholder='Введите имя проекта'
-                                 value={projectName}
-                                 onChange={(e) => setProjectName(e.target.value)}
-                              />
-                           </div>
-
-                           {/* Поле для добавления пользователей */}
-                           <div>
-                              <TaskComboBox
-                                 defaultLabel='Пользователь'
-                                 items={users}
-                                 placeholder='Выберите пользователя'
-                                 svg={<User className='w-4' />}
-                              />
-                           </div>
-
-                           {/* Кнопки */}
-                           <div className='flex justify-end gap-2'>
-                              <Button
-                                 variant='ghost'
-                                 onClick={() => setDropdownOpen(false)} // Закрываем меню
-                              >
-                                 Отмена
-                              </Button>
-                              <Button disabled={!projectName.trim()} variant='default' onClick={handleCreateProject}>
-                                 Добавить
-                              </Button>
-                           </div>
-                        </div>
-                     </DropdownMenuContent>
-                  </DropdownMenu>
+                  <SidebarAddProject />
                </div>
             </AccordionTrigger>
             <AccordionContent className='px-2.5 py-2'>

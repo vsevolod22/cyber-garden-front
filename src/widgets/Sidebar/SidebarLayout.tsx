@@ -7,15 +7,20 @@ import { SidebarPages } from './SidebarPages';
 import { SidebarAccordeon } from './SidebarAccordeon';
 import { CreateTaskModal } from '@/modules/Task/ui/CreateTaskModal';
 import { Task } from '@/modules/Task/ui/Task';
+import CenterInvestLogo from '@/shared/assets/СenterInvest.png';
 
 export function SidebarLayout({ ...props }: React.ComponentProps<typeof Sidebar>) {
    return (
       <Sidebar {...props}>
          <SidebarHeader>
-            <Link className='flex items-center gap-[10px] border-border px-5 py-3' to='/'>
-               <span className='text-2xl'>
-                  <strong>bigas</strong> <span className='font-light'>production</span>
-               </span>
+            <Link className='flex items-center gap-[10px] border-border px-3 py-2' to='/'>
+               <div className='flex items-center gap-3 text-[20px]'>
+                  <span>
+                     <strong>bigas</strong> <span className='font-light'>production</span>
+                  </span>
+                  <span className='font-meduim text-2xl'>x</span>
+                  <img alt='CenterInvest' className='mt-2 h-8 w-8' src={CenterInvestLogo} />
+               </div>
             </Link>
          </SidebarHeader>
          <SidebarContent>
