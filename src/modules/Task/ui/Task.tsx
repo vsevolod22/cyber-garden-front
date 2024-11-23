@@ -76,7 +76,7 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
             <div className='esmob:ml-0 ml-5 flex flex-wrap gap-2'>
                <TaskComboBox items={projects} />
                <TaskComboBox
-                  defaultLabel='Пользователь'
+                  defaultLabel='Исполнитель'
                   items={users}
                   placeholder='Выберите пользователя'
                   svg={<User className='w-4' />}
