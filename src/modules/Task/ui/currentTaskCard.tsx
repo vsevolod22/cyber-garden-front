@@ -1,49 +1,80 @@
+import { Card, CardContent, CardFooter, CardHeader } from '@/shared/ui/card';
+import { Textarea } from '@/shared/ui/textarea';
+import { AlarmClock, Calendar as CalendarIcon, Flag, User } from 'lucide-react';
+import { TaskCommand } from './TaskCommand';
+import type { ProjectItem } from './TaskComboBox';
+import { TaskComboBox } from './TaskComboBox';
 import { Button } from '@/shared/ui/button';
-import {
-   Dialog,
-   DialogContent,
-   DialogDescription,
-   DialogFooter,
-   DialogHeader,
-   DialogTitle,
-   DialogTrigger,
-} from '@/shared/ui/dialog';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
+import { DatePicker } from './DatePicker';
+import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 
 interface currentTaskCardProps {
    className?: string;
 }
+interface flag {
+   flag: ReactNode;
+   id: number;
+   priority: string;
+}
+const flags: flag[] = [
+   { id: 1, flag: <Flag className='mr-2 w-4' />, priority: 'Приоритет' },
+   { id: 2, flag: <Flag className='mr-2 w-4 fill-red-600' />, priority: 'Высокий' },
+   { id: 3, flag: <Flag className='mr-2 w-4 fill-yellow-400' />, priority: 'Средний' },
+   { id: 4, flag: <Flag className='mr-2 w-4 fill-blue-600' />, priority: 'Низкий' },
+];
+const users: ProjectItem[] = [
+   {
+      label: 'Пользователи',
+      value: 'users',
+      children: [
+         { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)' },
+         { label: 'Рутины 🌀', value: 'Рутины' },
+         { label: 'Вдохновение ✨', value: 'Вдохновение' },
+      ],
+   },
+];
 
-export const currentTaskCard = ({ className }: currentTaskCardProps) => {
+const projects: ProjectItem[] = [
+   {
+      label: 'Мои проекты',
+      value: 'my-projects',
+      children: [
+         { label: 'Учеба 📚', value: 'Учёба' },
+         { label: 'Рутины 🌀', value: 'Рутины' },
+         { label: 'Вдохновение ✨', value: 'Вдохновение' },
+      ],
+   },
+];
+export const CurrentTaskCard = ({ className }: currentTaskCardProps) => {
+   const [currentFlag, setCurrentFlag] = useState<flag>(flags[0]); // По умолчанию первый элемент
+
+   const handleFlagSelect = (selectedFlag: flag) => {
+      setCurrentFlag(selectedFlag);
+   };
+
    return (
-      <Dialog>
-         <DialogTrigger asChild>
-            <Button variant='outline'>Edit Profile</Button>
-         </DialogTrigger>
-         <DialogContent className='sm:max-w-[425px]'>
-            <DialogHeader>
-               <DialogTitle>Edit profile</DialogTitle>
-               <DialogDescription>Make changes to your profile here. Click save when you're done.</DialogDescription>
-            </DialogHeader>
-            <div className='grid gap-4 py-4'>
-               <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='name' className='text-right'>
-                     Name
-                  </Label>
-                  <Input id='name' value='Pedro Duarte' className='col-span-3' />
-               </div>
-               <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='username' className='text-right'>
-                     Username
-                  </Label>
-                  <Input id='username' value='@peduarte' className='col-span-3' />
-               </div>
+      <Card className='px-0 pb-0'>
+         <CardHeader className='es:h-10 esmob:justify-center ml-4 mt-3 flex flex-wrap justify-between border-b p-0 sm:h-10 lg:h-10'>
+            Учеба 📚
+         </CardHeader>
+         <CardContent className='esmob:px-2 flex flex-col gap-4 pb-0 pt-0'>
+            <Textarea className='my-4 h-12 border-none text-xl' placeholder='Название задачи' />
+            <Textarea className='h-20 border-none' placeholder='Описание задачи' />
+            <div className='flex flex-wrap gap-2'>
+               <DatePicker pickerName='Выберите дату выполнения задания' svg={<CalendarIcon className='mr-2 w-4' />} />
+               <TaskCommand svg={currentFlag.flag} text={currentFlag.priority}>
+                  {flags.map((item) => (
+                     <DropdownMenuItem key={item.id} className='flex' onClick={() => handleFlagSelect(item)}>
+                        {item.flag} {item.priority}
+                     </DropdownMenuItem>
+                  ))}
+               </TaskCommand>
+               <DatePicker pickerName='Выберите дату напоминаний' svg={<AlarmClock className='mr-2 w-4' />} />
             </div>
-            <DialogFooter>
-               <Button type='submit'>Save changes</Button>
-            </DialogFooter>
-         </DialogContent>
-      </Dialog>
+         </CardContent>
+         <CardFooter className='es:h-32 esmob:justify-center flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20'></CardFooter>
+      </Card>
    );
 };

@@ -10,13 +10,14 @@ interface TaskProps {
 }
 
 export const TaskPage = ({ className }: TaskProps) => {
-   const { tasks } = useTaskStore(); // Получаем состояние и методы из Zustand
-   const isChecked = tasks.xak || false; // Получаем состояние для ID задачи
+   const { taskStates } = useTaskStore(); // Получаем состояние из Zustand
+   const isAnyTaskChecked = Object.values(taskStates).some((value) => value === true); // Проверяем, есть ли выбранные задачи
+
    return (
       <div className='mt-14 flex flex-col gap-8'>
          <div className='flex justify-between'>
             <h1 className='text-4xl font-bold'>Сегодня</h1>
-            {isChecked && <Button className='bg-red-500 hover:bg-red-400'>Закрыть все задачи?</Button>}
+            {isAnyTaskChecked && <Button className='bg-red-500 hover:bg-red-400'>Закрыть все задачи</Button>}
          </div>
 
          <div className='flex flex-col'>

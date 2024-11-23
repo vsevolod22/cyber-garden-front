@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface TaskState {
-   tasks: Record<string, boolean>; // Состояние чекбоксов по ID задач
+   taskStates: Record<string, boolean>; // Состояние чекбоксов по ID задач
    setTaskChecked: (id: string, isChecked: boolean) => void; // Установка состояния задачи
    clearTasks: () => void; // Очистка всех задач
 }
@@ -10,12 +10,12 @@ interface TaskState {
 export const useTaskStore = create(
    persist<TaskState>(
       (set) => ({
-         tasks: {},
+         taskStates: {},
          setTaskChecked: (id, isChecked) =>
             set((state) => ({
-               tasks: { ...state.tasks, [id]: isChecked },
+               taskStates: { ...state.taskStates, [id]: isChecked },
             })),
-         clearTasks: () => set({ tasks: {} }),
+         clearTasks: () => set({ taskStates: {} }),
       }),
       {
          name: 'task-storage',

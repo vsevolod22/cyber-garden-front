@@ -1,33 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
-import { CreateTaskModal } from '@/modules/Task/ui/CreateTaskModal';
+
 import { Checkbox } from '@/shared/ui/checkbox';
 import { useTaskStore } from '../model/store/TaskStore';
+import { CurrentTaskCard } from './currentTaskCard';
+import { CreateTaskModal } from './CreateTaskModal';
 
 // Тип для задачи с вложенными задачами
 interface Task {
    id: string;
-   isChecked: boolean;
-   subTasks?: Task[];
    title: string;
+   subTasks?: Task[];
 }
 
 // Пример данных для задач
-const tasks: Task[] = [
+const tasksData: Task[] = [
    {
       id: 'task1',
       title: 'Выиграть хакатон',
-      isChecked: false,
       subTasks: [
          {
             id: 'subtask1',
             title: 'Пройти курс по React',
-            isChecked: false,
          },
          {
             id: 'subtask2',
+
             title: 'Улучшить навык алгоритмов',
-            isChecked: false,
          },
       ],
    },
@@ -35,35 +34,37 @@ const tasks: Task[] = [
 
 // Рекурсивный компонент для отображения задач
 const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
-   const { tasks, setTaskChecked } = useTaskStore();
-   const isChecked = tasks[task.id] || task.isChecked;
+   const { taskStates, setTaskChecked } = useTaskStore();
+   const isChecked = taskStates[task.id] || false; // Получаем состояние задачи из Zustand
 
    const handleCheckboxChange = (checked: boolean) => {
-      setTaskChecked(task.id, checked);
+      setTaskChecked(task.id, checked); // Обновляем состояние задачи в Zustand
    };
 
    return (
-      <div className='my-2'>
+      <div className={`my-2 ${level === 0 ? 'border-y' : 'border-none'} py-2`}>
          {/* Задача */}
-         <div className={`flex items-center space-x-2 border-y py-2`}>
-            <Checkbox checked={isChecked} className='h-6 w-6' id={task.id} onCheckedChange={handleCheckboxChange} />
+         <div className={`flex h-10 items-center space-x-2`}>
+            <Checkbox
+               className='h-6 w-6'
+               id={task.id}
+               checked={isChecked}
+               onCheckedChange={handleCheckboxChange} // Передаём обработчик
+            />
             <label
-               className='text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                htmlFor={task.id}
-               onClick={(e) => e.preventDefault()}
+               className='text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+               onClick={(e) => e.preventDefault()} // Предотвращаем действие по умолчанию
             >
                <CreateTaskModal
                   buttonChildren={task.title}
                   buttonClassName='custom-button-class'
-                  closeClassName='absolute right-2 top-2 rounded-sm'
-                  closeIcon={<X className='h-4 w-4' />}
                   modalClassName='p-0'
                   overlayClassName='bg-black/15'
+                  closeIcon={<X className='h-4 w-4' />}
+                  closeClassName='absolute right-2 top-2 rounded-sm'
                >
-                  <div className='p-4'>
-                     <h2 className='text-xl font-bold'>Детали задачи</h2>
-                     <p>Здесь вы можете добавить подробности о задаче.</p>
-                  </div>
+                  <CurrentTaskCard />
                </CreateTaskModal>
             </label>
          </div>
@@ -72,7 +73,7 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
          {task.subTasks &&
             task.subTasks.map((subTask) => (
                <div key={subTask.id} className='ml-6'>
-                  <TaskItem level={level + 1} task={subTask} />
+                  <TaskItem task={subTask} level={level + 1} />
                </div>
             ))}
       </div>
@@ -81,10 +82,27 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
 
 // Главный компонент
 export function CheckboxTask() {
+   const { taskStates, setTaskChecked } = useTaskStore();
+
+   // Инициализация задач в Zustand при загрузке
+   useEffect(() => {
+      const initializeTasks = (taskList: Task[]) => {
+         taskList.forEach((task) => {
+            if (!(task.id in taskStates)) {
+               setTaskChecked(task.id, false); // Устанавливаем начальное состояние для каждой задачи
+            }
+            if (task.subTasks) {
+               initializeTasks(task.subTasks); // Рекурсивно инициализируем подзадачи
+            }
+         });
+      };
+      initializeTasks(tasksData);
+   }, [setTaskChecked, taskStates]);
+
    return (
       <div>
-         {tasks.map((task) => (
-            <TaskItem key={task.id} level={0} task={task} />
+         {tasksData.map((task) => (
+            <TaskItem key={task.id} task={task} level={0} />
          ))}
       </div>
    );
