@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarRail } from '@/shared/ui/sidebar';
 import { Link } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { SidebarProfile } from './SidebarItems/SidebarProfile';
 import { SidebarPages } from './SidebarPages';
 import { SidebarAccordeon } from './SidebarAccordeon';
-import { CreateTaskModal } from '@/modules/Task/ui/CreateTaskModal';
+import { CreateModal } from '@/modules/Task/ui/CreateTaskModal';
+import { Task } from '@/modules/Task/ui/Task';
 
 export function SidebarLayout({ ...props }: React.ComponentProps<typeof Sidebar>) {
    return (
@@ -22,7 +23,17 @@ export function SidebarLayout({ ...props }: React.ComponentProps<typeof Sidebar>
             <SidebarGroup>
                <SidebarProfile />
                <SidebarGroupContent>
-                  <CreateTaskModal />
+                  <CreateModal
+                     buttonText='Добавить задачу'
+                     buttonIcon={<Plus className='rounded-full bg-primary text-background' size={24} />}
+                     buttonClassName='custom-button-class'
+                     modalClassName='p-0'
+                     overlayClassName='bg-black/15'
+                     closeIcon={<X className='h-4 w-4' />}
+                     closeClassName='absolute right-2 top-2 rounded-sm'
+                  >
+                     <Task />
+                  </CreateModal>
                </SidebarGroupContent>
                <SidebarGroupContent>
                   <SidebarPages />

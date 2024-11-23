@@ -1,17 +1,32 @@
 import { Dialog, DialogOverlay, DialogPortal, DialogTrigger } from '@/shared/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '@/utils/lib/utils';
-import { Plus, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import React from 'react';
 import { Button } from '@/shared/ui/button';
-import { Task } from '@/modules/Task';
 
-export const CreateTaskСontent = React.forwardRef<
+interface CreateModalProps {
+   children: React.ReactNode;
+   buttonText?: string;
+   showButton?: boolean;
+   buttonIcon?: React.ReactNode;
+   buttonClassName?: string;
+   modalClassName?: string;
+   overlayClassName?: string;
+   closeIcon?: React.ReactNode;
+   closeClassName?: string;
+}
+
+export const CreateModalContent = React.forwardRef<
    React.ElementRef<typeof DialogPrimitive.Content>,
-   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+      closeIcon?: React.ReactNode;
+      closeClassName?: string;
+      overlayClassName?: string;
+   }
+>(({ className, children, closeIcon, closeClassName, overlayClassName, ...props }, ref) => (
    <DialogPortal>
-      <DialogOverlay className='bg-black/15' />
+      <DialogOverlay className={cn('bg-black/15', overlayClassName)} />
       <DialogPrimitive.Content
          ref={ref}
          className={cn(
@@ -21,30 +36,52 @@ export const CreateTaskСontent = React.forwardRef<
          {...props}
       >
          {children}
-         <DialogPrimitive.Close className='absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground'>
-            <X className='h-4 w-4' />
+         <DialogPrimitive.Close
+            className={cn(
+               'absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+               closeClassName,
+            )}
+         >
+            {closeIcon || <X className='h-4 w-4' />}
             <span className='sr-only'>Close</span>
          </DialogPrimitive.Close>
       </DialogPrimitive.Content>
    </DialogPortal>
 ));
-CreateTaskСontent.displayName = 'SidebarModalContent';
+CreateModalContent.displayName = 'CreateModalContent';
 
-export const CreateTaskModal = () => {
+export const CreateModal: React.FC<CreateModalProps> = ({
+   children,
+   buttonText = 'Добавить задачу',
+   showButton = true,
+   buttonIcon,
+   buttonClassName,
+   modalClassName,
+   overlayClassName,
+   closeIcon,
+   closeClassName,
+}) => {
    return (
       <Dialog>
-         <DialogTrigger className='w-full'>
-            <Button
-               className='my-4 flex h-10 w-full justify-start text-base font-medium'
-               prefix={<Plus className='rounded-full bg-primary text-background' size={'24'} />}
-               variant={'ghost'}
-            >
-               Добавить задачу
-            </Button>
-         </DialogTrigger>
-         <CreateTaskСontent className='p-0'>
-            <Task />
-         </CreateTaskСontent>
+         {showButton && (
+            <DialogTrigger className='w-full'>
+               <Button
+                  className={cn('my-4 flex h-10 w-full justify-start text-base font-medium', buttonClassName)}
+                  prefix={buttonIcon}
+                  variant='ghost'
+               >
+                  {buttonText}
+               </Button>
+            </DialogTrigger>
+         )}
+         <CreateModalContent
+            className={modalClassName}
+            overlayClassName={overlayClassName}
+            closeIcon={closeIcon}
+            closeClassName={closeClassName}
+         >
+            {children}
+         </CreateModalContent>
       </Dialog>
    );
 };
