@@ -1,10 +1,12 @@
-import { DialogOverlay, DialogPortal } from '@/shared/ui/dialog';
+import { Dialog, DialogOverlay, DialogPortal, DialogTrigger } from '@/shared/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '@/utils/lib/utils';
-import { X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import React from 'react';
+import { Button } from '@/shared/ui/button';
+import { Task } from '@/modules/Task';
 
-export const CreateTaskModal = React.forwardRef<
+export const CreateTaskСontent = React.forwardRef<
    React.ElementRef<typeof DialogPrimitive.Content>,
    React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
@@ -26,4 +28,23 @@ export const CreateTaskModal = React.forwardRef<
       </DialogPrimitive.Content>
    </DialogPortal>
 ));
-CreateTaskModal.displayName = 'SidebarModalContent';
+CreateTaskСontent.displayName = 'SidebarModalContent';
+
+export const CreateTaskModal = () => {
+   return (
+      <Dialog>
+         <DialogTrigger className='w-full'>
+            <Button
+               className='my-4 flex h-10 w-full justify-start text-base font-medium'
+               prefix={<Plus className='rounded-full bg-primary text-background' size={'24'} />}
+               variant={'ghost'}
+            >
+               Добавить задачу
+            </Button>
+         </DialogTrigger>
+         <CreateTaskСontent className='p-0'>
+            <Task />
+         </CreateTaskСontent>
+      </Dialog>
+   );
+};

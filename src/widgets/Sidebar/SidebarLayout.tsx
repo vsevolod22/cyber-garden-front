@@ -6,7 +6,7 @@ import { Button } from '@/shared/ui/button';
 import { SidebarProfile } from './SidebarItems/SidebarProfile';
 import { SidebarPages } from './SidebarPages';
 import { SidebarAccordeon } from './SidebarAccordeon';
-import { SidebarModal } from './SidebarModal/SidebarModal';
+import { CreateTaskModal } from '@/modules/Task/ui/CreateTaskModal';
 
 export function SidebarLayout({ ...props }: React.ComponentProps<typeof Sidebar>) {
    return (
@@ -22,7 +22,7 @@ export function SidebarLayout({ ...props }: React.ComponentProps<typeof Sidebar>
             <SidebarGroup>
                <SidebarProfile />
                <SidebarGroupContent>
-                  <SidebarModal />
+                  <CreateTaskModal />
                </SidebarGroupContent>
                <SidebarGroupContent>
                   <SidebarPages />
