@@ -5,10 +5,10 @@ import type { AxiosError } from 'axios';
 import { useWorkspaceStore } from '../store/workSpaceStore';
 
 interface IWorkspace {
-   name: string;
-   id: number;
-   created_by: number;
    created_at: string;
+   created_by: number;
+   id: number;
+   name: string;
    updated_at: string;
 }
 

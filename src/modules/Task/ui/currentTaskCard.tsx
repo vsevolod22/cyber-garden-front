@@ -60,11 +60,11 @@ export const CurrentTaskCard = ({ className }: currentTaskCardProps) => {
 
    return (
       <Card className='flex px-0 pb-0'>
-         <CardHeader className='es:h-10 esmob:justify-center ml-4 mt-3 flex flex-wrap justify-between border-b p-0 sm:h-10 lg:h-10'>
+         <CardHeader className='ml-4 mt-3 flex flex-wrap justify-between border-b p-0 sm:h-10 lg:h-10 es:h-10 esmob:justify-center'>
             Учеба 📚
          </CardHeader>
-         <CardContent className='esmob:px-2 flex gap-4 pb-0 pt-0'>
-            <div className='esmob:px-2 flex flex-1 flex-col gap-4 pb-0 pt-0'>
+         <CardContent className='flex gap-4 pb-0 pt-0 esmob:px-2'>
+            <div className='flex flex-1 flex-col gap-4 pb-0 pt-0 esmob:px-2'>
                <h2 className='text-xl'>Выйграть хакатон</h2>
                <div>Описание задачи</div>
                {closeSubTuskCreate ? (
@@ -81,21 +81,26 @@ export const CurrentTaskCard = ({ className }: currentTaskCardProps) => {
                      </div>
                   </Button>
                )}
-
-               <div className='flex flex-wrap gap-2'></div>
+               <div className='flex flex-wrap gap-2'>{/* Вот тут логика работы с комментариями */}</div>
             </div>
-            {/* Проект
-               Срок
-               Напоминания
-               Приоритет */}
-            <div className='min-w-80 bg-accent p-4'>
+            <div className='min-w-80 rounded-lg bg-accent p-4'>
                <div className='flex w-full min-w-72 flex-col gap-3'>
                   <Title className='font-medium' text='Проект' />
-                  <TaskComboBox className='w-full' items={projects} />
+                  <TaskComboBox btnWidth='h-12' className='w-full' items={projects} />
                   <Title className='font-medium' text='Срок' />
-                  <DatePicker pickerName='Выберите дату выполнения задания' svg={<CalendarIcon className='mr-2 w-4' />} />
+                  <DatePicker
+                     className='h-12 w-full'
+                     pickerName='Выберите дату выполнения задания'
+                     svg={<CalendarIcon className='mr-2 w-4' />}
+                  />
                   <Title className='font-medium' text='Приоритет' />
-                  <TaskCommand slot className='flex w-full justify-between' svg={currentFlag.flag} text={currentFlag.priority}>
+                  <TaskCommand
+                     slot
+                     btnWidth='h-12'
+                     className='flex w-full justify-between'
+                     svg={currentFlag.flag}
+                     text={currentFlag.priority}
+                  >
                      {flags.map((item) => (
                         <DropdownMenuItem key={item.id} className='flex' onClick={() => handleFlagSelect(item)}>
                            {item.flag} {item.priority}
@@ -104,16 +109,14 @@ export const CurrentTaskCard = ({ className }: currentTaskCardProps) => {
                   </TaskCommand>
                   <Title className='font-medium' text='Напоминание' />
                   <DatePicker
-                     className='w-full'
+                     className='h-12 w-full'
                      pickerName='Выберите дату напоминаний'
                      svg={<AlarmClock className='mr-2 w-4' />}
                   />
-                  <Title className='font-medium' text='Комментарий' />
-                  <Textarea />
                </div>
             </div>
          </CardContent>
-         <CardFooter className='es:h-32 esmob:justify-center flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20'></CardFooter>
+         <CardFooter className='flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20 es:h-32 esmob:justify-center'></CardFooter>
       </Card>
    );
 };

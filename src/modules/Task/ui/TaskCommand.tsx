@@ -1,8 +1,10 @@
 import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { cn } from '@/utils/lib/utils';
 import type { ReactNode } from 'react';
 
 interface TaskCommandProps {
+   btnWidth?: string;
    children: ReactNode;
    className?: string;
    slot?: boolean;
@@ -10,11 +12,11 @@ interface TaskCommandProps {
    text: string;
 }
 
-export function TaskCommand({ svg, text, children, className, slot }: TaskCommandProps) {
+export function TaskCommand({ svg, text, children, className, slot, btnWidth }: TaskCommandProps) {
    return (
       <DropdownMenu>
          <DropdownMenuTrigger asChild className={className}>
-            <Button className='h-8' variant='outline'>
+            <Button className={cn('h-8 min-w-[120px] justify-between gap-2', btnWidth)} variant='outline'>
                {svg}
                {text}
                {slot && <span className='h-6 w-6' />}

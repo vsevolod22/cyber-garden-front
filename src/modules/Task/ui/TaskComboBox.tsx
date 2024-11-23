@@ -13,6 +13,7 @@ export interface ProjectItem {
 }
 
 interface TaskComboBoxProps {
+   btnWidth?: string;
    className?: string;
    defaultLabel?: string;
    items: ProjectItem[];
@@ -68,6 +69,7 @@ const renderItems = (
 export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
    items,
    className,
+   btnWidth,
    placeholder = 'Найти проект...',
    defaultLabel = 'Проект',
    svg = <FolderOpenDot className='w-4' />,
@@ -95,7 +97,12 @@ export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
    return (
       <Popover open={open} onOpenChange={setOpen}>
          <PopoverTrigger asChild className={className}>
-            <Button aria-expanded={open} className='h-8 min-w-[120px] justify-between gap-2' role='combobox' variant='outline'>
+            <Button
+               aria-expanded={open}
+               className={cn('h-8 min-w-[120px] justify-between gap-2', btnWidth)}
+               role='combobox'
+               variant='outline'
+            >
                {svg}
                {label}
                <ChevronDown className='opacity-50' />
@@ -103,7 +110,7 @@ export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
          </PopoverTrigger>
          <PopoverContent className='w-[250px] p-0'>
             <Command inputValue={inputValue} onInputValueChange={setInputValue}>
-               <div className='flex items-center border-b px-3' cmdk-input-wrapper=''>
+               <div className='flex items-center px-3' cmdk-input-wrapper=''>
                   <CommandInput className='h-9' placeholder={placeholder} />
                </div>
                <CommandList>

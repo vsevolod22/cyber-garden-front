@@ -8,9 +8,9 @@ import { CreateTaskModal } from './CreateTaskModal';
 
 interface Task {
    id: string;
-   title: string;
-   subTasks?: Task[];
    projectName: string;
+   subTasks?: Task[];
+   title: string;
 }
 
 const tasksData: Task[] = [
@@ -44,19 +44,19 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
    return (
       <div className={`my-2 ${level === 0 ? 'border-y' : 'border-none'} py-2`}>
          <div className={`relative flex h-10 items-center space-x-2`}>
-            <Checkbox className='h-6 w-6' id={task.id} checked={isChecked} onCheckedChange={handleCheckboxChange} />
+            <Checkbox checked={isChecked} className='h-6 w-6' id={task.id} onCheckedChange={handleCheckboxChange} />
             <label
-               htmlFor={task.id}
                className='text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+               htmlFor={task.id}
                onClick={(e) => e.preventDefault()}
             >
                <CreateTaskModal
                   buttonChildren={task.title}
                   buttonClassName='custom-button-class'
+                  closeClassName='absolute right-2 top-2 rounded-sm'
+                  closeIcon={<X className='h-4 w-4' />}
                   modalClassName='p-0'
                   overlayClassName='bg-black/15'
-                  closeIcon={<X className='h-4 w-4' />}
-                  closeClassName='absolute right-2 top-2 rounded-sm'
                >
                   <CurrentTaskCard />
                </CreateTaskModal>
@@ -67,7 +67,7 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
          {task.subTasks &&
             task.subTasks.map((subTask) => (
                <div key={subTask.id} className='ml-9'>
-                  <TaskItem task={subTask} level={level + 1} />
+                  <TaskItem level={level + 1} task={subTask} />
                </div>
             ))}
       </div>
@@ -94,7 +94,7 @@ export function CheckboxTask() {
    return (
       <div>
          {tasksData.map((task) => (
-            <TaskItem key={task.id} task={task} level={0} />
+            <TaskItem key={task.id} level={0} task={task} />
          ))}
       </div>
    );
