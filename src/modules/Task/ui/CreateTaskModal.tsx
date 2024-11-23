@@ -69,7 +69,6 @@ export const CreateTaskModal: React.FC<CreateModalProps> = ({
                   className={cn('my-4 flex h-10 w-full justify-start text-base font-medium', buttonClassName)}
                   prefix={buttonIcon}
                   variant='ghost'
-                  onClick={(event) => event.stopPropagation()}
                >
                   {buttonChildren}
                </Button>
