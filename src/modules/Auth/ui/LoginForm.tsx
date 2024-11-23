@@ -9,6 +9,7 @@ import { Button } from '@/shared/ui/button';
 import { Title } from '@/shared/ui/title';
 import { useTokenStore } from '../model/store/authStore';
 import { Loader } from '@/shared/ui/loader';
+import TelegramLoginButton from './telegrammBtn';
 
 export const loginSchema = z.object({
    email: z.string().email({ message: 'Некорректный email' }),
@@ -24,7 +25,10 @@ export const LoginForm = ({ toggleOpenStatus, setLoadingStatus }: LoginFormProps
    const { setAccessToken, setRefreshToken } = useTokenStore();
    const { mutate: login, isPending } = useLogin();
    const [error, setError] = useState<string | null>(null);
-
+   let name = 'bigas_notification_bot'; // Это имя бота который вы ранее создавали в BotFather
+   const handleBot = (user: any) => {
+      console.log(user);
+   };
    useEffect(() => {
       setLoadingStatus(isPending);
    }, [isPending]);

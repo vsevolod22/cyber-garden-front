@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { Button } from '@/shared/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/ui/dialog';
@@ -6,6 +7,7 @@ import { RegistrationForm } from './RegistrationForm';
 import { LoginForm } from './LoginForm';
 import { useTokenStore } from '../model/store/authStore';
 import { cn } from '@/utils/lib/utils';
+import TelegramLoginButton from './telegrammBtn';
 
 interface AuthModalProps {
    authModalMode?: 'login' | 'register';
@@ -16,9 +18,14 @@ export function AuthModal({ className, authModalMode = 'login' }: AuthModalProps
    const [isLoading, setisLoading] = useState(false);
    const [open, setOpen] = useState(false);
    const { accessToken, clearAccessToken, clearRefreshToken } = useTokenStore();
+
+   const handleBot = (user: any) => {
+      console.log(user);
+   };
    const toggleOpenStatus = (status: boolean) => {
       setOpen(status);
    };
+
    const clearStorage = () => {
       clearAccessToken();
       clearRefreshToken();
@@ -43,12 +50,11 @@ export function AuthModal({ className, authModalMode = 'login' }: AuthModalProps
                      {authModalMode === 'register' && 'Регистрация'}
                   </Button>
                </DialogTrigger>
-
                <Tabs defaultValue={authModalMode}>
                   <DialogContent aria-describedby='dialog-description' className='flex flex-col sm:max-w-md'>
                      <DialogHeader className='h-6'>
                         {!isLoading && (
-                           <TabsList className=''>
+                           <TabsList>
                               <TabsTrigger className='hover:bg-background' value='login'>
                                  Авторизация
                               </TabsTrigger>
@@ -60,6 +66,14 @@ export function AuthModal({ className, authModalMode = 'login' }: AuthModalProps
                      </DialogHeader>
                      <TabsContent value='login'>
                         <LoginForm setLoadingStatus={setLoadingStatus} toggleOpenStatus={toggleOpenStatus} />
+                        <TelegramLoginButton
+                           botName='bigas_notification_bot' // Имя вашего бота
+                           buttonSize='large' // Размер кнопки
+                           cornerRadius={3} // Радиус скругления
+                           usePic={false} // Показывать ли фото пользователя
+                           dataAuthUrl='https://cybergarden.leganyst.ru/auth/telegram' // Укажите ваш реальный домен здесь
+                           className='h-4 bg-blue-400'
+                        />
                      </TabsContent>
                      <TabsContent value='register'>
                         <RegistrationForm setLoadingStatus={setLoadingStatus} toggleOpenStatus={toggleOpenStatus} />

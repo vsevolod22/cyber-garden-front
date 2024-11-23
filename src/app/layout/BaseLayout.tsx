@@ -30,7 +30,7 @@ const BaseLayout = () => {
          ) : (
             <div className='relative flex h-screen items-center justify-center gap-3 bg-background'>
                <ThemeSwitcher className='absolute right-4 top-4' />
-               <img alt='Изображение для стартовой страницы' className='h-[800px] w-[800px]' src={NonAuthImage} />
+               <img alt='Изображение для стартовой страницы' className='h-[800px] w-[800px] lg:h-[600px]' src={NonAuthImage} />
                <div className='flex max-w-[700px] flex-col gap-16'>
                   <p className='text-3xl font-bold'>
                      Присоединяйся к тем, кто уже живет с удовольствием управляй задачами, анализируй нагрузку и наслаждайся
