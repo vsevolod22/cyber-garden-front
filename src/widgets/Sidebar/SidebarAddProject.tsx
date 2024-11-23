@@ -6,6 +6,10 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Plus, User, X } from 'lucide-react';
 import { useState } from 'react';
 
+import { useWorkspaceStore } from '@/modules/WorkSpaces/model/store/workSpaceStore';
+import { AxiosError } from 'axios';
+import { useCreateProject } from '@/modules/projects/api/CreateProjectApi';
+
 const usersData = [
    { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)' },
    { label: 'Козлов А. А. (kozlov@example.com)', value: 'Козлов А. А. (kozlov@example.com)' },
@@ -17,6 +21,9 @@ export const SidebarAddProject = () => {
    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
    const [isDropdownOpen, setDropdownOpen] = useState(false);
 
+   const currentWorkspaceId = useWorkspaceStore((state) => state.workspaces[0]?.id); // Получаем ID текущего рабочего пространства
+   const { mutate: project, isPending } = useCreateProject(); // Подключаем хук для мутации
+
    const handleAddUser = (user: string) => {
       if (!selectedUsers.includes(user)) {
          setSelectedUsers((prev) => [...prev, user]);
@@ -27,12 +34,25 @@ export const SidebarAddProject = () => {
       setSelectedUsers((prev) => prev.filter((u) => u !== user));
    };
 
-   const handleCreateProject = () => {
-      if (projectName.trim()) {
-         console.log({ projectName, selectedUsers });
-         setProjectName('');
-         setSelectedUsers([]);
-         setDropdownOpen(false);
+   const handleCreateProject = async () => {
+      if (projectName.trim() && currentWorkspaceId) {
+         project(
+            {
+               name: projectName,
+               workspace_id: currentWorkspaceId,
+               created_by: 1, // Здесь должен быть ID текущего пользователя, заменить на реальный
+            },
+            {
+               onSuccess: () => {
+                  setProjectName('');
+                  setSelectedUsers([]);
+                  setDropdownOpen(false);
+               },
+               onError: (error: AxiosError) => {
+                  console.error('Ошибка при добавлении проекта:', error.message);
+               },
+            },
+         );
       }
    };
 
@@ -66,7 +86,7 @@ export const SidebarAddProject = () => {
                   />
                </div>
 
-               {/* Список добавленных пользователей */}
+               {/* Выпадающий список для добавления пользователей */}
                <TaskComboBox
                   items={[
                      {
@@ -94,15 +114,13 @@ export const SidebarAddProject = () => {
                   ))}
                </div>
 
-               {/* Выпадающий список для добавления пользователей */}
-
                {/* Кнопки действия */}
                <div className='flex justify-end gap-2'>
                   <Button variant='ghost' onClick={() => setDropdownOpen(false)}>
                      Отмена
                   </Button>
-                  <Button disabled={!projectName.trim()} variant='default' onClick={handleCreateProject}>
-                     Добавить
+                  <Button disabled={!projectName.trim() || isPending} variant='default' onClick={handleCreateProject}>
+                     {isPending ? 'Добавление...' : 'Добавить'}
                   </Button>
                </div>
             </div>

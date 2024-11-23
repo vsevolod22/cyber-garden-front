@@ -9,11 +9,11 @@ import { Button } from '@/shared/ui/button';
 import { Title } from '@/shared/ui/title';
 import { useTokenStore } from '../model/store/authStore';
 import { Loader } from '@/shared/ui/loader';
-import TelegramLoginButton from './telegrammBtn';
+import { useFetchWorkspacesAsync } from '@/modules/WorkSpaces/model/api/workSpacesGet';
 
 export const loginSchema = z.object({
    email: z.string().email({ message: 'Некорректный email' }),
-   password: z.string().min(2, { message: 'Пароль должен быть не менее 8 символов' }),
+   password: z.string().min(8, { message: 'Пароль должен быть не менее 8 символов' }),
 });
 
 interface LoginFormProps {
@@ -23,15 +23,13 @@ interface LoginFormProps {
 
 export const LoginForm = ({ toggleOpenStatus, setLoadingStatus }: LoginFormProps) => {
    const { setAccessToken, setRefreshToken } = useTokenStore();
-   const { mutate: login, isPending } = useLogin();
+   const { refetch: fetchWorkspaces, isFetching } = useFetchWorkspacesAsync();
+   const { mutateAsync: login, isPending } = useLogin();
    const [error, setError] = useState<string | null>(null);
-   let name = 'bigas_notification_bot'; // Это имя бота который вы ранее создавали в BotFather
-   const handleBot = (user: any) => {
-      console.log(user);
-   };
+
    useEffect(() => {
-      setLoadingStatus(isPending);
-   }, [isPending]);
+      setLoadingStatus(isPending || isFetching); // Учитываем загрузку логина и рабочих пространств
+   }, [isPending, isFetching]);
 
    const loginForm = useForm<z.infer<typeof loginSchema>>({
       resolver: zodResolver(loginSchema),
@@ -41,22 +39,26 @@ export const LoginForm = ({ toggleOpenStatus, setLoadingStatus }: LoginFormProps
       },
    });
 
-   const onLoginSubmit = (values: z.infer<typeof loginSchema>) => {
-      login(values, {
-         onSuccess: (data) => {
-            setAccessToken(data.access_token);
-            setRefreshToken(data.refresh_token);
-            toggleOpenStatus(false);
-         },
-         onError: () => {
-            setError('Ошибка при входе');
-         },
-      });
+   const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
+      setError(null); // Сбрасываем предыдущую ошибку
+      try {
+         const data = await login(values); // Выполняем запрос на логин
+         setAccessToken(data.access_token); // Сохраняем токены в Zustand
+         setRefreshToken(data.refresh_token);
+
+         // Выполняем запрос рабочих пространств после успешной авторизации
+         await fetchWorkspaces();
+
+         toggleOpenStatus(false); // Закрываем форму
+      } catch (err) {
+         console.error('Ошибка при входе:', err);
+         setError('Ошибка при входе'); // Устанавливаем сообщение об ошибке
+      }
    };
 
    return (
       <>
-         {isPending ? (
+         {isPending || isFetching ? (
             <div className='flex h-60 w-full items-center justify-center'>
                <Loader />
             </div>
