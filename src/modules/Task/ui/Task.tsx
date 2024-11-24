@@ -180,7 +180,14 @@ export const Task = ({
             </div>
 
             <div className='flex gap-2 sm:mr-5 md:ml-5 md:mr-5 es:mx-5 esmob:mx-0 esmob:justify-center'>
-               <Button variant={'ghost'} onClick={setButtonClick ? () => setButtonClick(false) : undefined}>
+               <Button
+                  variant='ghost'
+                  onClick={() => {
+                     if (setModalOpen) {
+                        setModalOpen(false); // Закрываем модальное окно
+                     }
+                  }}
+               >
                   Отмена
                </Button>
                <Button disabled={!isFormValid()} onClick={handleSubmit}>

@@ -1,39 +1,39 @@
 import { create } from 'zustand';
 
 interface Task {
-   id: number;
-   name: string;
+   assigned_to: number | null; // ID пользователя, которому назначена задача
+   created_at: string;
+   created_by: number;
    description: string;
    due_date: string; // Дата выполнения задачи в формате ISO
-   reminder_time?: string | null; // Время напоминания в формате ISO (опционально)
-   priority: string; // Приоритет задачи (например, "Высокий", "Средний", "Низкий")
-   status: string;
-   assigned_to: number | null; // ID пользователя, которому назначена задача
-   created_by: number;
-   created_at: string;
-   updated_at: string;
-   project_id: number; // ID проекта, к которому относится задача
+   id: number;
    is_completed: boolean;
-   subtasks: Task[]; // Подзадачи
+   name: string;
    parent_task_id: number;
+   priority: string; // Приоритет задачи (например, "Высокий", "Средний", "Низкий")
+   project_id: number; // ID проекта, к которому относится задача
+   reminder_time?: string | null; // Время напоминания в формате ISO (опционально)
+   status: string;
+   subtasks: Task[]; // Подзадачи
+   updated_at: string;
 }
 
 interface TaskState {
+   selectedTaskId: number | null; // ID выбранной задачи
    tasks: Task[]; // Список задач
    taskStates: Record<number, boolean>; // Состояния задач (например, чекбоксы)
-   selectedTaskId: number | null; // ID выбранной задачи
-   setSelectedTaskId: (id: number) => void; // Установка выбранной задачи
-   addTask: (task: Task) => void; // Добавление задачи
    addSubtask: (parentId: number, subtask: Task) => void; // Добавление подзадачи
+   addTask: (task: Task) => void; // Добавление задачи
    clearTasks: () => void; // Очистка всех задач
    getTaskById: (id: number) => Task | undefined; // Получение задачи по ID
-   removeTask: (id: number) => void; // Удаление задачи
    removeSubtask: (parentId: number, subtaskId: number) => void; // Удаление подзадачи
+   removeTask: (id: number) => void; // Удаление задачи
+   setSelectedTaskId: (id: number) => void; // Установка выбранной задачи
    setTaskChecked: (id: number, isChecked: boolean) => void; // Установка состояния задачи
    setTasks: (tasks: Task[]) => void; // Установка всех задач
    toggleTaskCompletion: (id: number) => void; // Переключение состояния задачи
-   updateTask: (updatedTask: Task) => void; // Обновление задачи
    updateSubtask: (parentId: number, updatedSubtask: Task) => void; // Обновление подзадачи
+   updateTask: (updatedTask: Task) => void; // Обновление задачи
 }
 
 export const useTaskStore = create<TaskState>()((set, get) => ({

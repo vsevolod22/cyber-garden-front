@@ -33,8 +33,7 @@ export const SidebarPages = () => {
                   <SidebarMenuButton
                      asChild
                      className={cn('px-2.5', {
-                        'bg-accent text-white': isActive, // Активный стиль
-                        'hover:bg-sidebar-accent': !isActive, // Стиль при наведении
+                        'bg-accent': isActive, // Активный стиль
                      })}
                   >
                      <Link to={item.url}>

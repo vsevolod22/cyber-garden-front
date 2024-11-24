@@ -36,9 +36,9 @@ const flags: Flag[] = [
 ];
 
 interface Subtask {
+   completed: boolean;
    id: number;
    name: string;
-   completed: boolean;
 }
 
 export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
@@ -125,13 +125,14 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
    }
 
    return (
-      <Card className='flex px-0 pb-0'>
+      <Card className='flex h-screen flex-col px-0 pb-0 lg:h-auto'>
          <CardHeader className='ml-4 mt-3 flex flex-wrap justify-between border-b p-0 sm:h-10 lg:h-10'>
             {task.name || 'Название задачи'}
          </CardHeader>
-         <CardContent className='flex gap-4 pb-0 pt-0'>
+         <CardContent className='flex h-full flex-col gap-4 overflow-y-auto pb-0 pt-0 lg:h-auto lg:flex-row'>
+            {/* Левая колонка */}
             <div className='flex flex-1 flex-col gap-4 pb-0 pt-0'>
-               <h2 className='text-xl'>{task.name}</h2>
+               <h2 className='text-lg sm:text-xl'>{task.name}</h2>
                <Textarea
                   className='border-none'
                   placeholder='Описание задачи'
@@ -141,10 +142,10 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                {task.subtasks && task.subtasks.length > 0 && (
                   <div className='subtasks-list'>
                      {task.subtasks.map((subtask) => (
-                        <div key={subtask.id} className='flex items-center'>
+                        <div key={subtask.id} className='flex items-center gap-2'>
                            <input
-                              type='checkbox'
                               checked={subtask.is_completed}
+                              type='checkbox'
                               onChange={() => {
                                  const updatedSubtasks = task.subtasks.map((s) =>
                                     s.id === subtask.id ? { ...s, completed: !s.is_completed } : s,
@@ -158,10 +159,10 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                   </div>
                )}
                {isAddingSubtask ? (
-                  <Task setButtonClick={() => setCloseSubTuskCreate(false)} parentTask={task.id} />
+                  <Task parentTask={task.id} setButtonClick={() => setCloseSubTuskCreate(false)} />
                ) : (
                   <Button
-                     className='my-4 flex h-10 w-full justify-start text-base font-medium'
+                     className='my-4 flex h-10 w-full justify-start text-sm font-medium lg:text-base'
                      variant='ghost'
                      onClick={() => setIsAddingSubtask(true)}
                   >
@@ -172,9 +173,11 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                   </Button>
                )}
             </div>
-            <div className='min-w-80 rounded-lg bg-accent p-4'>
-               <div className='flex w-full min-w-72 flex-col gap-3'>
-                  <Title className='font-medium' text='Проект' />
+
+            {/* Правая колонка */}
+            <div className='min-w-full rounded-lg bg-accent p-4 lg:min-w-80'>
+               <div className='flex flex-col gap-3'>
+                  <Title className='text-sm font-medium lg:text-base' text='Проект' />
                   <TaskComboBox
                      items={[
                         { label: 'Учёба', value: '1' },
@@ -184,19 +187,18 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                      className='w-full'
                      onSelect={(value) => handleProjectSelect(value)}
                   />
-                  <Title className='font-medium' text='Срок' />
+                  <Title className='text-sm font-medium lg:text-base' text='Срок' />
                   <DatePicker
-                     className='h-12 w-full'
+                     className='h-10 w-full sm:h-12'
                      pickerName='Выберите дату выполнения задания'
-                     selectedDate={dueDate}
                      selectedDate={task.due_date ? new Date(task.due_date) : undefined}
                      svg={<CalendarIcon className='mr-2 w-4' />}
                      onDateChange={(date) => handleDateChange('due_date', date)}
                   />
-                  <Title className='font-medium' text='Приоритет' />
+                  <Title className='text-sm font-medium lg:text-base' text='Приоритет' />
                   <TaskCommand
                      slot
-                     btnWidth='h-12'
+                     btnWidth='h-10 sm:h-12'
                      className='flex w-full justify-between'
                      svg={<FlagIcon className={currentFlag.className} />}
                      text={currentFlag.priority}
@@ -207,16 +209,15 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                         </DropdownMenuItem>
                      ))}
                   </TaskCommand>
-                  <Title className='font-medium' text='Напоминание' />
+                  <Title className='text-sm font-medium lg:text-base' text='Напоминание' />
                   <DatePicker
-                     className='h-12 w-full'
+                     className='h-10 w-full sm:h-12'
                      pickerName='Выберите дату напоминаний'
-                     selectedDate={reminderDate}
                      selectedDate={task.reminder_time ? new Date(task.reminder_time) : undefined}
                      svg={<AlarmClock className='mr-2 w-4' />}
                      onDateChange={(date) => handleDateChange('reminder_time', date)}
                   />
-                  <Title className='font-medium' text='Исполнители' />
+                  <Title className='text-sm font-medium lg:text-base' text='Исполнители' />
                   <TaskComboBox
                      items={[
                         {

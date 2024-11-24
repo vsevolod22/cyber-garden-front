@@ -18,6 +18,7 @@ const usersData = [
 ];
 
 export const SidebarAddProject = () => {
+   const isMobile = window.innerWidth <= 640;
    const [projectName, setProjectName] = useState('');
    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
    const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -60,18 +61,20 @@ export const SidebarAddProject = () => {
    return (
       <DropdownMenu open={isDropdownOpen} onOpenChange={setDropdownOpen}>
          <DropdownMenuTrigger asChild>
-            {/* {isPending && <Loader />}
-            {isSuccess && (
-               <Button className='h-5 w-5' size='icon' variant='ghost' onClick={(e) => e.stopPropagation()}>
-                  <Plus className='h-5 w-5' />
-               </Button>
-            )} */}
-
             <Button className='h-5 w-5' disabled={isPending} size='icon' variant='ghost' onClick={(e) => e.stopPropagation()}>
                <Plus className='h-5 w-5' />
             </Button>
          </DropdownMenuTrigger>
-         <DropdownMenuContent align='start' className='w-96 p-4' side='right' onClick={(e) => e.stopPropagation()}>
+         <DropdownMenuContent
+            style={{
+               transform: isMobile ? 'translateX(150px)' : 'none', // Сдвиг только на мобильных
+            }}
+            align='start'
+            className='w-80 rounded-lg bg-white p-4 shadow-lg sm:w-96'
+            side='right'
+            sideOffset={24}
+            onClick={(e) => e.stopPropagation()}
+         >
             <div className='relative mb-4 flex items-center justify-between'>
                <h3 className='text-lg font-semibold'>Добавить проект</h3>
                {isPending && <Loader className='absolute right-8 top-0' />}

@@ -42,7 +42,12 @@ export const SidebarProfile = () => {
                               )}
                            </div>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align='start' side='right'>
+                        <DropdownMenuContent
+                           align='start'
+                           className='w-full max-w-md -translate-x-4 overflow-hidden rounded-lg bg-background shadow-lg sm:w-auto sm:max-w-xs' // Подстраиваем стили
+                           side='right'
+                           sideOffset={-16} // Смещение блока уведомлений левее
+                        >
                            <AnimatePresence>
                               {reminders.map((reminder) => (
                                  <motion.div
@@ -52,24 +57,29 @@ export const SidebarProfile = () => {
                                     initial={{ opacity: 0, x: 100 }}
                                     transition={{ duration: 0.3 }}
                                  >
-                                    <DropdownMenuItem className='flex cursor-pointer justify-between gap-3'>
-                                       <div className='flex items-center gap-4'>
-                                          <BellRing size={28} />
+                                    <DropdownMenuItem className='flex cursor-pointer flex-col justify-between gap-3 p-4 hover:bg-gray-100 sm:flex-row'>
+                                       <div className='flex w-full items-center gap-4 sm:w-auto'>
+                                          <BellRing className='sm:text-base' size={24} />
                                           <div className='flex flex-col gap-1'>
-                                             <div className='text-base font-semibold'>{reminder.message}</div>
-                                             <div>
+                                             <div className='text-sm font-semibold sm:text-base'>{reminder.message}</div>
+                                             <div className='text-xs sm:text-sm'>
                                                 Дата события: <span className='font-medium'>{reminder.date}</span>
                                              </div>
                                           </div>
                                        </div>
-                                       <Button className='shrink-0' onClick={(event) => handleAccept(event, reminder.id)}>
+                                       <Button
+                                          className='w-full shrink-0 text-sm sm:w-auto sm:px-2 sm:py-1 sm:text-base'
+                                          onClick={(event) => handleAccept(event, reminder.id)}
+                                       >
                                           Принять
                                        </Button>
                                     </DropdownMenuItem>
                                  </motion.div>
                               ))}
                            </AnimatePresence>
-                           {reminders.length === 0 && <div className='p-4 text-center text-gray-500'>Нет новых уведомлений</div>}
+                           {reminders.length === 0 && (
+                              <div className='p-4 text-center text-sm text-gray-500 sm:text-base'>Нет новых уведомлений</div>
+                           )}
                         </DropdownMenuContent>
                      </div>
                   </DropdownMenu>
