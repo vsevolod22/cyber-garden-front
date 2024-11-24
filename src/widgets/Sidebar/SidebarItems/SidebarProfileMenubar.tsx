@@ -3,6 +3,7 @@ import { CalendarCheck, ChartNoAxesColumnIncreasing, Settings, User } from 'luci
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from '@/shared/ui/menubar';
 import { SidebarMenuButton, SidebarMenuItem } from '@/shared/ui/sidebar';
 import { useTokenStore } from '@/modules/Auth/model/store/authStore';
+import { Link } from 'react-router-dom';
 
 export const SidebarProfileMenubar = () => {
    const { clearAccessToken, clearRefreshToken } = useTokenStore();
@@ -28,9 +29,13 @@ export const SidebarProfileMenubar = () => {
                   <CalendarCheck size={16} />
                   Выполненные задачи
                </MenubarItem>
+
                <MenubarItem className='flex cursor-pointer gap-1.5'>
-                  <ChartNoAxesColumnIncreasing size={16} />
-                  Статистика
+                  <Link className='flex' to='/statistic'>
+                     {' '}
+                     <ChartNoAxesColumnIncreasing size={16} />
+                     Статистика
+                  </Link>
                </MenubarItem>
                <MenubarItem className='flex cursor-pointer gap-1.5'>
                   <Settings size={16} />

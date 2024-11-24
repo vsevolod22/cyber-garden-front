@@ -5,6 +5,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage/NotFoundPage';
 import { ProfilePage } from '@/pages/ProfilePage/ProfilePage';
 import { ProjectPage } from '@/pages/ProjectPage/ProjectPage';
 import { SchedulePage } from '@/pages/SchedulePage/SchedulePage';
+import { Statistic } from '@/pages/Statistic/Statistic';
 
 export enum AppRoutes {
    MAIN = 'main',
@@ -12,6 +13,7 @@ export enum AppRoutes {
    PROJECT = 'project',
    SCHEDULE = 'schedule',
    NOT_FOUND = 'not_found',
+   STATISTIC = 'statistic',
 }
 
 export const RoutePath: Record<AppRoutes, string> = {
@@ -20,6 +22,7 @@ export const RoutePath: Record<AppRoutes, string> = {
    [AppRoutes.NOT_FOUND]: '*',
    [AppRoutes.PROJECT]: '/projects/:id', // Параметр id для страницы проекта
    [AppRoutes.SCHEDULE]: '/schedule',
+   [AppRoutes.STATISTIC]: '/statistic',
 };
 
 export const routeConfig: Record<AppRoutes, RouteObject> = {
@@ -43,5 +46,9 @@ export const routeConfig: Record<AppRoutes, RouteObject> = {
    [AppRoutes.NOT_FOUND]: {
       path: RoutePath.not_found,
       element: <NotFoundPage />,
+   },
+   [AppRoutes.STATISTIC]: {
+      path: RoutePath.statistic,
+      element: <Statistic />,
    },
 };
