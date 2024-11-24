@@ -1,38 +1,50 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/shared/ui/sidebar';
+import { cn } from '@/utils/lib/utils';
 import { Award, BookMarked, Calendar } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 const items = [
    {
       title: 'Сегодня',
-      url: '#',
+      url: '/',
       icon: Calendar,
-      isActive: true,
    },
    {
       title: 'Расписание вуза',
-      url: '#',
+      url: '/schedule',
       icon: BookMarked,
    },
    {
       title: 'Достижения',
-      url: '#',
+      url: '/achievements',
       icon: Award,
    },
 ];
 
 export const SidebarPages = () => {
+   const location = useLocation();
+
    return (
       <SidebarMenu>
-         {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-               <SidebarMenuButton asChild className='px-2.5' {...(item.isActive && { 'data-active': true })}>
-                  <a href={item.url}>
-                     <item.icon size={16} />
-                     <span>{item.title}</span>
-                  </a>
-               </SidebarMenuButton>
-            </SidebarMenuItem>
-         ))}
+         {items.map((item) => {
+            const isActive = location.pathname === item.url; // Сравниваем текущий путь с URL элемента
+            return (
+               <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                     asChild
+                     className={cn('px-2.5', {
+                        'bg-accent text-white': isActive, // Активный стиль
+                        'hover:bg-sidebar-accent': !isActive, // Стиль при наведении
+                     })}
+                  >
+                     <Link to={item.url}>
+                        <item.icon size={16} />
+                        <span>{item.title}</span>
+                     </Link>
+                  </SidebarMenuButton>
+               </SidebarMenuItem>
+            );
+         })}
       </SidebarMenu>
    );
 };
