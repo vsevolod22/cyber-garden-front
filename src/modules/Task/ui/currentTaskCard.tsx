@@ -1,13 +1,13 @@
 import { Card, CardContent, CardFooter, CardHeader } from '@/shared/ui/card';
 import { Textarea } from '@/shared/ui/textarea';
-import { AlarmClock, Calendar as CalendarIcon, Flag as FlagIcon, Plus } from 'lucide-react';
+import { AlarmClock, Calendar as CalendarIcon, Flag as FlagIcon, Plus, User, X } from 'lucide-react';
 import { TaskCommand } from './TaskCommand';
 import { TaskComboBox } from './TaskComboBox';
 import { Button } from '@/shared/ui/button';
 import { DatePicker } from './DatePicker';
 import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
 import { useTaskStore } from '../model/store/TaskStore';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Title } from '@/shared/ui/title';
 import { Input } from '@/shared/ui/input';
 import { Task } from './Task';
@@ -17,10 +17,16 @@ interface CurrentTaskCardProps {
 }
 
 interface Flag {
-   id: number;
    className: string;
+   id: number;
    priority: string;
 }
+
+const usersData = [
+   { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)', role: 'Пользователь' },
+   { label: 'Козлов А. А. (kozlov@example.com)', value: 'Козлов А. А. (kozlov@example.com)', role: 'Администратор' },
+   { label: 'Семенова И. И. (semenova@example.com)', value: 'Семенова И. И. (semenova@example.com)', role: 'Менеджер' },
+];
 
 const flags: Flag[] = [
    { id: 1, className: 'mr-2 w-4', priority: 'Приоритет' },
@@ -45,6 +51,7 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
    const [project, setProject] = useState<string | null>(null);
    const [isAddingSubtask, setIsAddingSubtask] = useState(false);
    const [newSubtaskName, setNewSubtaskName] = useState('');
+   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
    useEffect(() => {
       if (task) {
@@ -54,6 +61,7 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
          setProject(task.project_id ? task.project_id.toString() : null);
          setIsAddingSubtask(false);
          setNewSubtaskName('');
+         setSelectedUsers(task.assigned_to || []);
       }
    }, [task]);
 
@@ -73,7 +81,25 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
    const handleProjectSelect = (value: string) => {
       setProject(value);
       if (task) {
-         updateTask({ ...task, project_id: parseInt(value) });
+         updateTask({ ...task, project_id: Number.parseInt(value) });
+      }
+   };
+
+   const handleAddUser = (value: string) => {
+      if (!selectedUsers.includes(value)) {
+         const updatedUsers = [...selectedUsers, value];
+         setSelectedUsers(updatedUsers);
+         if (task) {
+            updateTask({ ...task, assigned_to: updatedUsers });
+         }
+      }
+   };
+
+   const handleRemoveUser = (user: string) => {
+      const updatedUsers = selectedUsers.filter((selectedUser) => selectedUser !== user);
+      setSelectedUsers(updatedUsers);
+      if (task) {
+         updateTask({ ...task, assigned_to: updatedUsers });
       }
    };
 
@@ -108,8 +134,8 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                <h2 className='text-xl'>{task.name}</h2>
                <Textarea
                   className='border-none'
-                  value={task.description}
                   placeholder='Описание задачи'
+                  value={task.description}
                   onChange={(e) => updateTask({ ...task, description: e.target.value })}
                />
                {task.subtasks && task.subtasks.length > 0 && (
@@ -150,12 +176,12 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                <div className='flex w-full min-w-72 flex-col gap-3'>
                   <Title className='font-medium' text='Проект' />
                   <TaskComboBox
-                     btnWidth='h-12'
-                     className='w-full'
                      items={[
                         { label: 'Учёба', value: '1' },
                         { label: 'Работа', value: '2' },
                      ]}
+                     btnWidth='h-12'
+                     className='w-full'
                      onSelect={(value) => handleProjectSelect(value)}
                   />
                   <Title className='font-medium' text='Срок' />
@@ -163,8 +189,9 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                      className='h-12 w-full'
                      pickerName='Выберите дату выполнения задания'
                      selectedDate={dueDate}
-                     onDateChange={(date) => handleDateChange('due_date', date)}
+                     selectedDate={task.due_date ? new Date(task.due_date) : undefined}
                      svg={<CalendarIcon className='mr-2 w-4' />}
+                     onDateChange={(date) => handleDateChange('due_date', date)}
                   />
                   <Title className='font-medium' text='Приоритет' />
                   <TaskCommand
@@ -185,9 +212,38 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                      className='h-12 w-full'
                      pickerName='Выберите дату напоминаний'
                      selectedDate={reminderDate}
-                     onDateChange={(date) => handleDateChange('reminder_time', date)}
+                     selectedDate={task.reminder_time ? new Date(task.reminder_time) : undefined}
                      svg={<AlarmClock className='mr-2 w-4' />}
+                     onDateChange={(date) => handleDateChange('reminder_time', date)}
                   />
+                  <Title className='font-medium' text='Исполнители' />
+                  <TaskComboBox
+                     items={[
+                        {
+                           label: 'Пользователи',
+                           value: 'users',
+                           children: usersData.map((user) => ({
+                              label: user.label,
+                              value: user.value,
+                              role: user.role,
+                           })),
+                        },
+                     ]}
+                     defaultLabel='Пользователь'
+                     placeholder='Выберите пользователя'
+                     svg={<User className='w-4' />}
+                     onSelect={handleAddUser}
+                  />
+                  <div className='max-w-[380px] space-y-2'>
+                     {selectedUsers.map((user, index) => (
+                        <div key={index} className='flex items-center justify-between rounded bg-accent px-3 py-2'>
+                           <p className='text-sm'>{user}</p>
+                           <Button size='icon' variant='ghost' onClick={() => handleRemoveUser(user)}>
+                              <X className='h-4 w-4' />
+                           </Button>
+                        </div>
+                     ))}
+                  </div>
                </div>
             </div>
          </CardContent>
