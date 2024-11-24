@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { api } from '@/shared/api/axios-instance';
 import { AxiosError } from 'axios';
 import { useTaskStore } from '@/modules/Task/model/store/TaskStore';
+import { queryClient } from '@/shared/api/query-client';
 
 interface CreateTaskData {
    name: string; // Название задачи
@@ -26,6 +27,7 @@ interface Task {
    is_completed: boolean;
    created_at: string;
    updated_at: string;
+   parent_task_id: number;
 }
 
 const createTask = async (taskData: CreateTaskData): Promise<Task> => {
@@ -46,6 +48,7 @@ export const useCreateTask = () => {
       onSuccess: (newTask) => {
          console.log('Задача успешно создана:', newTask);
          addTask(newTask); // Добавляем задачу в Zustand
+         queryClient.invalidateQueries(['tasks']);
       },
       onError: (error) => {
          console.error('Ошибка при создании задачи:', error.message);

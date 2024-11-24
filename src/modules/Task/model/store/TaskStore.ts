@@ -15,6 +15,7 @@ interface Task {
    project_id: number; // ID проекта, к которому относится задача
    is_completed: boolean;
    subtasks: Task[]; // Подзадачи
+   parent_task_id: number;
 }
 
 interface TaskState {

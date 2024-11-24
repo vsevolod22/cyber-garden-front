@@ -36,7 +36,7 @@ export const useFetchTasksByProject = (projectId: number) => {
    const setTasks = useTaskStore((state) => state.setTasks);
 
    const queryResult = useQuery<Task[], AxiosError>({
-      queryKey: ['tasks', projectId],
+      queryKey: ['tasks'],
       queryFn: () => fetchTasksByProject(projectId),
    });
 

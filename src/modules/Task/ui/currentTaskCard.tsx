@@ -158,7 +158,7 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                   </div>
                )}
                {isAddingSubtask ? (
-                  <Task setButtonClick={() => setCloseSubTuskCreate(false)} />
+                  <Task setButtonClick={() => setCloseSubTuskCreate(false)} parentTask={task.id} />
                ) : (
                   <Button
                      className='my-4 flex h-10 w-full justify-start text-base font-medium'

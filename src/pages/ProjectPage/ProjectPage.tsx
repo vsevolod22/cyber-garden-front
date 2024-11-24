@@ -54,7 +54,7 @@ export const ProjectPage = () => {
       <Container>
          <div className='mt-14 flex flex-col gap-8'>
             <div className='flex justify-between'>
-               <h1 className='text-4xl font-bold'>Проект</h1>
+               <h1 className='text-4xl font-bold'>{project?.name}</h1>
                {isAnyTaskChecked && <Button className='bg-red-500 hover:bg-red-400'>Закрыть все задачи</Button>}
             </div>
 

@@ -13,6 +13,7 @@ import { useCreateTask } from '../api/CreateTaskApi';
 import { useFetchProjectsByWorkspace } from '@/modules/projects/api/GetUserProjectsApi';
 
 interface TaskProps {
+   parentTask?: number;
    className?: string;
    setButtonClick?: (close: boolean) => void;
 }
@@ -55,9 +56,15 @@ interface CreateTaskData {
    assigned_to: number | null; // Идентификатор пользователя, назначенного на задачу (или null)
    reminder_time: string; // Время напоминания в формате ISO (может быть пустой строкой, если не указано)
    created_by: number; // Идентификатор пользователя, создавшего задачу
+   parent_task_id: number;
 }
 
-export const Task = ({ className, setButtonClick, setModalOpen }: TaskProps & { setModalOpen?: (isOpen: boolean) => void }) => {
+export const Task = ({
+   className,
+   setButtonClick,
+   setModalOpen,
+   parentTask,
+}: TaskProps & { setModalOpen?: (isOpen: boolean) => void }) => {
    const { data: projects, isSuccess } = useFetchProjectsByWorkspace();
    const [name, setName] = useState('');
    const [description, setDescription] = useState('');
@@ -83,10 +90,12 @@ export const Task = ({ className, setButtonClick, setModalOpen }: TaskProps & { 
          name,
          due_date: dueDate!.toLocaleDateString('en-CA'),
          priority: priority.value,
-         project_id: project ? Number.parseInt(project.value) : 0,
-         assigned_to: assignedTo ? Number.parseInt(assignedTo.value) : 0,
+
+         project_id: project ? parseInt(project.value) : 0,
+         assigned_to: assignedTo ? parseInt(assignedTo.value) : 0,
          reminder_time: reminderTime ? reminderTime.toISOString() : '',
-         created_by: 1, // ID текущего пользователя
+         created_by: 1,
+         parent_task_id: parentTask!,
       };
 
       createTaskMutation.mutate(taskData);
