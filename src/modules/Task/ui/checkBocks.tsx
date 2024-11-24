@@ -34,7 +34,7 @@ const statuses = [
 ];
 
 const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
-   const { taskStates, setTaskChecked, updateTask } = useTaskStore();
+   const { taskStates, setTaskChecked, updateTask, setSelectedTaskId } = useTaskStore();
    const currentProject = useProjectStore((state) => state.currentProject);
    const [currentStatus, setCurrentStatus] = useState(statuses.find((item) => item.status === task.status) || statuses[0]);
    const isChecked = taskStates[task.id] || false;
@@ -44,8 +44,12 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
       updateTask({ ...task, is_completed: checked });
    };
 
+   const handleTaskClick = () => {
+      setSelectedTaskId(task.id);
+   };
+
    return (
-      <div className={`my-2 ${level === 0 ? 'border-y' : 'border-none'} py-2`}>
+      <div className={`my-2 ${level === 0 ? 'border-y' : 'border-none'} py-2`} onClick={handleTaskClick}>
          <div className={`relative flex h-10 items-center space-x-2`}>
             <Checkbox checked={isChecked} className='h-6 w-6' id={`${task.id}`} onCheckedChange={handleCheckboxChange} />
             <label
@@ -64,7 +68,7 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
                   <CurrentTaskCard />
                </CreateTaskModal>
             </label>
-            <TaskCommand svg={statuses[0].icon} text={task.status}>
+            <TaskCommand svg={statuses[0].color} text={task.status} rounded={true} btnWidth={'w-5'}>
                {statuses.map((item) => (
                   <DropdownMenuItem
                      key={item.id}
@@ -91,50 +95,27 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
 };
 
 export function CheckboxTask() {
-   const { tasks, taskStates, setTaskChecked } = useTaskStore();
+   const { tasks, taskStates, setTaskChecked, selectedTaskId, getTaskById } = useTaskStore();
    const { selectedProjectId } = useProjectStore();
 
-   console.log(selectedProjectId);
-   const numericProjectId = Number(selectedProjectId);
-
-   // Вызываем хук для получения задач по текущему проекту
    const { data: fetchedTasks, isLoading, isError } = useFetchTasksByProject(selectedProjectId!);
 
-   // Инициализируем состояния задач
    useEffect(() => {
-      const initializeTasks = (taskList: Task[]) => {
-         taskList.forEach((task) => {
-            if (!(task.id in taskStates)) {
-               setTaskChecked(task.id, task.is_completed);
-            }
-            if (task.subtasks && task.subtasks.length > 0) {
-               initializeTasks(task.subtasks);
-            }
+      if (fetchedTasks) {
+         fetchedTasks.forEach((task) => {
+            setTaskChecked(task.id, task.is_completed);
          });
-      };
-
-      if (fetchedTasks && fetchedTasks.length > 0) {
-         initializeTasks(fetchedTasks);
       }
-   }, [fetchedTasks, setTaskChecked, taskStates]);
+   }, [fetchedTasks, setTaskChecked]);
 
-   if (isLoading) {
-      return <div>Загрузка задач...</div>;
-   }
+   if (isLoading) return <div>Загрузка задач...</div>;
+   if (isError) return <div>Ошибка при загрузке задач</div>;
 
-   if (isError) {
-      return <div>Ошибка при загрузке задач</div>;
-   }
-
-   if (!fetchedTasks || fetchedTasks.length === 0) {
-      return <div>Задачи не найдены</div>;
-   }
+   const selectedTask = selectedTaskId ? getTaskById(selectedTaskId) : null;
 
    return (
       <div>
-         {fetchedTasks.map((task) => (
-            <TaskItem key={task.id} level={0} task={task} />
-         ))}
+         <div>{fetchedTasks?.map((task) => <TaskItem key={task.id} level={0} task={task} />)}</div>
       </div>
    );
 }

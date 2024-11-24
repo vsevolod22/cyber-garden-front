@@ -104,6 +104,7 @@ export const SidebarAddProject = () => {
                         children: usersData.map((user) => ({
                            label: user.label,
                            value: user.value,
+                           role: user.role,
                         })),
                      },
                   ]}

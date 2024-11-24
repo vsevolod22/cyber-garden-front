@@ -1,87 +1,89 @@
 import { Card, CardContent, CardFooter, CardHeader } from '@/shared/ui/card';
 import { Textarea } from '@/shared/ui/textarea';
-import { AlarmClock, Calendar as CalendarIcon, Flag, Plus, User, X } from 'lucide-react';
+import { AlarmClock, Calendar as CalendarIcon, Flag, Plus } from 'lucide-react';
 import { TaskCommand } from './TaskCommand';
-import type { ProjectItem } from './TaskComboBox';
 import { TaskComboBox } from './TaskComboBox';
 import { Button } from '@/shared/ui/button';
 import { DatePicker } from './DatePicker';
 import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
-import type { ReactNode } from 'react';
 import { useState } from 'react';
-import { CreateTaskModal } from './CreateTaskModal';
-import { Task } from './Task';
 import { Title } from '@/shared/ui/title';
+import { Task } from './Task';
 
-interface currentTaskCardProps {
+interface CurrentTaskCardProps {
    className?: string;
 }
-interface flag {
-   flag: ReactNode;
+
+interface Flag {
+   flag: React.ReactNode;
    id: number;
    priority: string;
 }
-const flags: flag[] = [
+
+const flags: Flag[] = [
    { id: 1, flag: <Flag className='mr-2 w-4' />, priority: 'Приоритет' },
    { id: 2, flag: <Flag className='mr-2 w-4 fill-red-600' />, priority: 'Высокий' },
    { id: 3, flag: <Flag className='mr-2 w-4 fill-yellow-400' />, priority: 'Средний' },
    { id: 4, flag: <Flag className='mr-2 w-4 fill-blue-600' />, priority: 'Низкий' },
 ];
-const users: ProjectItem[] = [
-   {
-      label: 'Пользователи',
-      value: 'users',
-      children: [
-         { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)' },
-         { label: 'Рутины 🌀', value: 'Рутины' },
-         { label: 'Вдохновение ✨', value: 'Вдохновение' },
-      ],
-   },
+
+const projects = [
+   { label: 'Учёба 📚', value: '1' },
+   { label: 'Работа 💼', value: '2' },
 ];
 
-const projects: ProjectItem[] = [
-   {
-      label: 'Мои проекты',
-      value: 'my-projects',
-      children: [
-         { label: 'Учеба 📚', value: 'Учёба' },
-         { label: 'Рутины 🌀', value: 'Рутины' },
-         { label: 'Вдохновение ✨', value: 'Вдохновение' },
-      ],
-   },
-];
-export const CurrentTaskCard = ({ className }: currentTaskCardProps) => {
-   const [currentFlag, setCurrentFlag] = useState<flag>(flags[0]); // По умолчанию первый элемент
-   const [closeSubTuskCreate, setCloseSubTuskCreate] = useState<boolean>(false);
+export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
+   const [currentFlag, setCurrentFlag] = useState<Flag>(flags[0]);
+   const [subTasks, setSubTasks] = useState<string[]>([]); // Состояние для хранения подзадач
+   const [isAddingSubTask, setIsAddingSubTask] = useState<boolean>(false);
 
-   const handleFlagSelect = (selectedFlag: flag) => {
+   const handleFlagSelect = (selectedFlag: Flag) => {
       setCurrentFlag(selectedFlag);
+   };
+
+   const handleAddSubTask = () => {
+      setIsAddingSubTask(true);
+   };
+
+   const handleSaveSubTask = (taskName: string) => {
+      if (taskName.trim()) {
+         setSubTasks([...subTasks, taskName]);
+      }
+      setIsAddingSubTask(false);
+   };
+
+   const handleCancelSubTask = () => {
+      setIsAddingSubTask(false);
    };
 
    return (
       <Card className='flex px-0 pb-0'>
-         <CardHeader className='ml-4 mt-3 flex flex-wrap justify-between border-b p-0 sm:h-10 lg:h-10 es:h-10 esmob:justify-center'>
-            Учеба 📚
-         </CardHeader>
-         <CardContent className='flex gap-4 pb-0 pt-0 esmob:px-2'>
-            <div className='flex flex-1 flex-col gap-4 pb-0 pt-0 esmob:px-2'>
+         <CardHeader className='ml-4 mt-3 flex flex-wrap justify-between border-b p-0 sm:h-10 lg:h-10'>Учеба 📚</CardHeader>
+         <CardContent className='flex gap-4 pb-0 pt-0'>
+            <div className='flex flex-1 flex-col gap-4 pb-0 pt-0'>
                <h2 className='text-xl'>Выйграть хакатон</h2>
-               <div>Описание задачи</div>
-               {closeSubTuskCreate ? (
-                  <Task setButtonClick={() => setCloseSubTuskCreate(false)} />
+               <Textarea className='border-none' placeholder='Описание задачи' />
+               <div className='mt-4'>
+                  {subTasks.map((subTask, index) => (
+                     <div key={index} className='mb-2 flex items-center gap-2'>
+                        <span>{subTask}</span>
+                     </div>
+                  ))}
+               </div>
+               {isAddingSubTask ? (
+                  <Task setButtonClick={(taskName: string) => handleSaveSubTask(taskName)} onCancel={handleCancelSubTask} />
                ) : (
                   <Button
-                     className={'my-4 flex h-10 w-full justify-start text-base font-medium'}
+                     className='my-4 flex h-10 w-full justify-start text-base font-medium'
                      variant='ghost'
-                     onClick={() => setCloseSubTuskCreate(true)}
+                     onClick={handleAddSubTask}
                   >
                      <div className='flex gap-2'>
                         <Plus className='text-primary' />
-                        Добавить подазадачу
+                        Добавить подзадачу
                      </div>
                   </Button>
                )}
-               <div className='flex flex-wrap gap-2'>{/* Вот тут логика работы с комментариями */}</div>
             </div>
             <div className='min-w-80 rounded-lg bg-accent p-4'>
                <div className='flex w-full min-w-72 flex-col gap-3'>
@@ -116,7 +118,7 @@ export const CurrentTaskCard = ({ className }: currentTaskCardProps) => {
                </div>
             </div>
          </CardContent>
-         <CardFooter className='flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20 es:h-32 esmob:justify-center'></CardFooter>
+         <CardFooter className='flex flex-wrap items-center justify-between border-t sm:h-32 lg:h-20'></CardFooter>
       </Card>
    );
 };

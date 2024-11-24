@@ -15,35 +15,23 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ pickerName, svg, className, selectedDate, onDateChange }: DatePickerProps) {
-   const [date, setDate] = React.useState<Date | undefined>(selectedDate);
-
-   React.useEffect(() => {
-      setDate(selectedDate);
-   }, [selectedDate]);
-
-   React.useEffect(() => {
-      if (onDateChange) {
-         onDateChange(date);
-      }
-   }, [date, onDateChange]);
-
    return (
       <Popover>
          <PopoverTrigger asChild>
             <Button
                className={cn(
                   'flex h-8 min-w-[200px] justify-start gap-2 text-left font-normal',
-                  !date && 'text-muted-foreground',
+                  !selectedDate && 'text-muted-foreground',
                   className,
                )}
                variant={'outline'}
             >
                {svg}
-               {date ? format(date, 'PPP', { locale: ru }) : <span>{pickerName}</span>}
+               {selectedDate ? format(selectedDate, 'PPP', { locale: ru }) : <span>{pickerName}</span>}
             </Button>
          </PopoverTrigger>
          <PopoverContent align='start' className='w-auto p-0'>
-            <Calendar initialFocus mode='single' selected={date} onSelect={setDate} />
+            <Calendar initialFocus mode='single' selected={selectedDate} onSelect={onDateChange} />
          </PopoverContent>
       </Popover>
    );
