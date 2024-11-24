@@ -4,10 +4,10 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 interface TokenState {
    accessToken: string | null;
    refreshToken: string | null;
-   setAccessToken: (token: string | null) => void;
-   setRefreshToken: (token: string | null) => void;
    clearAccessToken: () => void;
    clearRefreshToken: () => void;
+   setAccessToken: (token: string | null) => void;
+   setRefreshToken: (token: string | null) => void;
 }
 
 export const useTokenStore = create(

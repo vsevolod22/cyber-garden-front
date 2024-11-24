@@ -7,12 +7,12 @@ import { useProjectStore } from '../model/useProjectStore';
 import { useWorkspaceStore } from '@/modules/WorkSpaces/model/store/workSpaceStore';
 
 interface Project {
-   name: string;
-   id: number;
-   workspace_id: number;
-   created_by: number;
    created_at: string;
+   created_by: number;
+   id: number;
+   name: string;
    updated_at: string;
+   workspace_id: number;
 }
 
 const fetchProjectsByWorkspace = async (workspaceId: number): Promise<Project[]> => {

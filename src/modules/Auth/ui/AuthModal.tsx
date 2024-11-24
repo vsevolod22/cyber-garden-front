@@ -62,14 +62,14 @@ export function AuthModal({ className, authModalMode = 'login' }: AuthModalProps
                      </DialogHeader>
                      <TabsContent value='login'>
                         <LoginForm setLoadingStatus={setLoadingStatus} toggleOpenStatus={toggleOpenStatus} />
-                        <TelegramLoginButton
+                        {/* <TelegramLoginButton
                            botName='bigas_notification_bot' // Имя вашего бота
                            buttonSize='large' // Размер кнопки
                            className='h-4 bg-blue-400'
                            cornerRadius={3} // Радиус скругления
                            dataAuthUrl='https://cybergarden.leganyst.ru/auth/telegram' // Укажите ваш реальный домен здесь
                            usePic={false} // Показывать ли фото пользователя
-                        />
+                        /> */}
                      </TabsContent>
                      <TabsContent value='register'>
                         <RegistrationForm setLoadingStatus={setLoadingStatus} toggleOpenStatus={toggleOpenStatus} />

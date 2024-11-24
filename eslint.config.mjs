@@ -4,7 +4,7 @@ export default eslint(
    {
       typescript: true,
       jsx: true,
-      jsxA11y: true,
+      jsxA11y: false,
       react: true,
       stylistic: false,
       next: false,
@@ -16,8 +16,8 @@ export default eslint(
          'perfectionist/sort-imports': 'off',
          'siberiacancode-react/function-component-definition': 'off',
          'siberiacancode-jsx-a11y/heading-has-content': 'off',
-         'unused-imports/no-unused-vars' : 'warn',
-         'react-refresh/only-export-components':'off'
+         'unused-imports/no-unused-vars': 'warn',
+         'react-refresh/only-export-components': 'off',
       },
    },
 );

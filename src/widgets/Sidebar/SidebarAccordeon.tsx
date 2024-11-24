@@ -1,12 +1,18 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/shared/ui/accordion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/shared/ui/dropdown-menu';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
-import { EllipsisIcon, LayoutGrid, Plus, User, X } from 'lucide-react';
+import { CheckIcon, EllipsisIcon, LayoutGrid, Plus, User, X } from 'lucide-react';
 import { SidebarAddProject } from './SidebarAddProject';
 
 import { useFetchProjectsByWorkspace } from '@/modules/projects/api/GetUserProjectsApi';
 import { useDeleteProject } from '@/modules/projects/api/DeleteProjectApi';
 import { Skeleton } from '@/shared/ui/skeleton';
+import { useUpdateProject } from '@/modules/projects/api/UpdateProjectApi';
+import { useState } from 'react';
+import { Button } from '@/shared/ui/button';
+import { useNavigate, useParams } from 'react-router-dom';
+import { cn } from '@/utils/lib/utils';
+import { Input } from '@/shared/ui/input';
 
 // const projectItems = [
 //    { label: 'Хакатон 🤯', value: 'Учёба' },
@@ -17,7 +23,27 @@ import { Skeleton } from '@/shared/ui/skeleton';
 export const SidebarAccordeon = () => {
    const { data: projects, isSuccess, isLoading: isProjectsLoading } = useFetchProjectsByWorkspace();
    const deleteProjectMutation = useDeleteProject();
-   const isDeleting = deleteProjectMutation.status === 'pending'; // Состояние мутации
+   const updateProjectMutation = useUpdateProject();
+   const [editingProjectId, setEditingProjectId] = useState<number | null>(null);
+   const [newName, setNewName] = useState<string>('');
+   const navigate = useNavigate();
+
+   const { id: currentProjectId } = useParams<{ id: string }>(); // Извлечение ID из URL
+
+   const startEditing = (id: number, currentName: string) => {
+      setEditingProjectId(id);
+      setNewName(currentName);
+   };
+
+   const saveEditing = () => {
+      if (!editingProjectId) return;
+      updateProjectMutation.mutate({ id: editingProjectId, name: newName });
+      setEditingProjectId(null); // Сбрасываем состояние редактирования
+   };
+
+   const handleRedirect = (itemId: number) => {
+      navigate(`/projects/${itemId}`);
+   };
 
    return (
       <Accordion collapsible type='single'>
@@ -32,23 +58,39 @@ export const SidebarAccordeon = () => {
                </div>
             </AccordionTrigger>
             <AccordionContent className='px-2.5 py-2'>
-               {/* Скелетоны отображаются при загрузке данных проектов или удалении */}
-               {isDeleting && (
+               {/* Скелетоны */}
+               {isProjectsLoading && (
                   <div className='flex w-full flex-col gap-[2px]'>
-                     {Array.from({ length: !projects ? 8 : projects.length }, (_, index) => (
+                     {Array.from({ length: 8 }, (_, index) => (
                         <Skeleton key={index} className='h-8 w-full' />
                      ))}
                   </div>
                )}
-               {/* Отображение списка проектов после успешной загрузки */}
+               {/* Отображение проектов */}
                {isSuccess &&
-                  !isDeleting &&
-                  !isProjectsLoading &&
                   projects.map((item) => (
-                     <DropdownMenu key={item.id}>
-                        <div className='group/item relative flex cursor-pointer justify-between rounded-[4px] bg-sidebar px-2 py-1.5 hover:bg-sidebar-accent'>
+                     <div
+                        key={item.id}
+                        className={cn(
+                           'group/item relative flex cursor-pointer justify-between rounded-[4px] bg-sidebar px-2 py-1.5 hover:bg-sidebar-accent',
+                           {
+                              'bg-accent font-semibold': currentProjectId === String(item.id), // Подсветка активного проекта
+                           },
+                        )}
+                        onClick={() => handleRedirect(item.id)}
+                     >
+                        {editingProjectId === item.id ? (
+                           <div className='flex items-center gap-2'>
+                              <Input value={newName} onChange={(e) => setNewName(e.target.value)} />
+                              <Button className='absolute right-2 h-6 w-6' size='icon' onClick={saveEditing}>
+                                 <CheckIcon size={20} />
+                              </Button>
+                           </div>
+                        ) : (
                            <p className='peer'>{item.name}</p>
+                        )}
 
+                        <DropdownMenu>
                            <DropdownMenuTrigger
                               asChild
                               className='invisible rounded-[4px] bg-sidebar-accent transition-opacity duration-200 hover:bg-sidebar group-hover/item:visible data-[state=open]:visible data-[state=open]:bg-accent'
@@ -57,7 +99,7 @@ export const SidebarAccordeon = () => {
                            </DropdownMenuTrigger>
                            <DropdownMenuContent align='start' side='right'>
                               <DropdownMenuItem className='cursor-pointer'>
-                                 <span>Изменить</span>
+                                 <span onClick={() => startEditing(item.id, item.name)}>Изменить</span>
                               </DropdownMenuItem>
                               <DropdownMenuItem className='cursor-pointer'>
                                  <span className='text-red-500' onClick={() => deleteProjectMutation.mutate(item.id)}>
@@ -65,8 +107,8 @@ export const SidebarAccordeon = () => {
                                  </span>
                               </DropdownMenuItem>
                            </DropdownMenuContent>
-                        </div>
-                     </DropdownMenu>
+                        </DropdownMenu>
+                     </div>
                   ))}
             </AccordionContent>
          </AccordionItem>
