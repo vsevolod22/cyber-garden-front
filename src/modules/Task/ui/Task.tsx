@@ -57,7 +57,7 @@ interface CreateTaskData {
    created_by: number; // Идентификатор пользователя, создавшего задачу
 }
 
-export const Task = ({ className, setButtonClick }: TaskProps) => {
+export const Task = ({ className, setButtonClick, setModalOpen }: TaskProps & { setModalOpen?: (isOpen: boolean) => void }) => {
    const { data: projects, isSuccess } = useFetchProjectsByWorkspace();
    const [name, setName] = useState('');
    const [description, setDescription] = useState('');
@@ -83,24 +83,21 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
          name,
          due_date: dueDate!.toLocaleDateString('en-CA'),
          priority: priority.value,
-         project_id: project ? parseInt(project.value) : 0,
-         assigned_to: assignedTo ? parseInt(assignedTo.value) : 0,
-         reminder_time: reminderTime
-            ? reminderTime.toISOString() // Формат ISO без времени
-            : '',
-         created_by: 1, // Замените на ID текущего пользователя
+         project_id: project ? Number.parseInt(project.value) : 0,
+         assigned_to: assignedTo ? Number.parseInt(assignedTo.value) : 0,
+         reminder_time: reminderTime ? reminderTime.toISOString() : '',
+         created_by: 1, // ID текущего пользователя
       };
 
       createTaskMutation.mutate(taskData);
    };
-
    const isFormValid = () => {
-      return name && dueDate && project;
+      return name && project && dueDate && reminderTime;
    };
 
    useEffect(() => {
       if (createTaskMutation.isSuccess) {
-         // Очистка формы
+         // Сброс формы
          setName('');
          setDescription('');
          setDueDate(undefined);
@@ -109,9 +106,9 @@ export const Task = ({ className, setButtonClick }: TaskProps) => {
          setAssignedTo(null);
          setPriority(flags[0]);
 
-         // Закрытие формы
-         if (setButtonClick) {
-            setButtonClick(false);
+         // Закрытие модального окна
+         if (setModalOpen) {
+            setModalOpen(false);
          }
       }
    }, [createTaskMutation.isSuccess]);
