@@ -33,9 +33,11 @@ export const ProjectPage = () => {
    const isAnyTaskChecked = Object.values(taskStates).some((value) => value === true); // Проверяем, есть ли выбранные задачи
    if (isLoading) {
       return (
-         <div>
-            <Loader />
-         </div>
+         <Container>
+            <div className='flex h-screen w-full items-center justify-center'>
+               <Loader className='h-16 w-16' />
+            </div>
+         </Container>
       );
    }
 
