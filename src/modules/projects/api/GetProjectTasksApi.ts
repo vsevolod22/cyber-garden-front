@@ -34,10 +34,10 @@ const fetchTasksByProject = async (projectId: number): Promise<Task[]> => {
 
 export const useFetchTasksByProject = (projectId: number) => {
    const setTasks = useTaskStore((state) => state.setTasks);
-   const { projects } = useProjectStore();
+
    const queryResult = useQuery<Task[], AxiosError>({
       queryKey: ['tasks', projectId],
-      queryFn: () => fetchTasksByProject(projects[0].id),
+      queryFn: () => fetchTasksByProject(projectId),
    });
 
    const { data, error, isSuccess, isError } = queryResult;

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Plus, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ChartNoAxesCombined, Plus, X } from 'lucide-react';
 
 import { Checkbox } from '@/shared/ui/checkbox';
 import { useTaskStore } from '../model/store/TaskStore';
@@ -7,6 +7,9 @@ import { CurrentTaskCard } from './currentTaskCard';
 import { CreateTaskModal } from './CreateTaskModal';
 import { useProjectStore } from '@/modules/projects/model/useProjectStore';
 import { useFetchTasksByProject } from '@/modules/projects/api/GetProjectTasksApi';
+import { useParams } from 'react-router-dom';
+import { TaskCommand } from './TaskCommand';
+import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
 
 interface Task {
    id: number;
@@ -21,18 +24,24 @@ interface Task {
    is_completed: boolean;
    created_at: string;
    updated_at: string;
+   subtasks: Task[];
 }
+const statuses = [
+   { id: 1, status: 'Открыто', color: 'bg-blue-400', icon: '🟦' },
+   { id: 2, status: 'В работе', color: 'bg-yellow-400', icon: '🟨' },
+   { id: 3, status: 'Проверка', color: 'bg-orange-400', icon: '🟧' },
+   { id: 4, status: 'Готово', color: 'bg-green-400', icon: '🟩' },
+];
 
 const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
    const { taskStates, setTaskChecked, updateTask } = useTaskStore();
    const currentProject = useProjectStore((state) => state.currentProject);
+   const [currentStatus, setCurrentStatus] = useState(statuses.find((item) => item.status === task.status) || statuses[0]);
    const isChecked = taskStates[task.id] || false;
 
    const handleCheckboxChange = (checked: boolean) => {
       setTaskChecked(task.id, checked);
-      // Обновляем поле is_completed в хранилище задач
       updateTask({ ...task, is_completed: checked });
-      // Здесь вы можете добавить вызов мутации для обновления задачи на бэкенде
    };
 
    return (
@@ -55,12 +64,24 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
                   <CurrentTaskCard />
                </CreateTaskModal>
             </label>
+            <TaskCommand svg={statuses[0].icon} text={task.status}>
+               {statuses.map((item) => (
+                  <DropdownMenuItem
+                     key={item.id}
+                     className={`flex cursor-pointer items-center p-2 hover:bg-gray-200`}
+                     onClick={() => setCurrentStatus(item)}
+                  >
+                     <div className={`mr-2 h-3 w-3 rounded-full ${item.color}`} />
+                     {item.status}
+                  </DropdownMenuItem>
+               ))}
+            </TaskCommand>
+
             <div className='absolute right-3 text-gray-400'>{currentProject?.name}</div>
          </div>
 
-         {/* Если есть подзадачи */}
-         {task.subTasks &&
-            task.subTasks.map((subTask) => (
+         {task.subtasks &&
+            task.subtasks.map((subTask) => (
                <div key={subTask.id} className='ml-9'>
                   <TaskItem level={level + 1} task={subTask} />
                </div>
@@ -71,12 +92,13 @@ const TaskItem: React.FC<{ task: Task; level: number }> = ({ task, level }) => {
 
 export function CheckboxTask() {
    const { tasks, taskStates, setTaskChecked } = useTaskStore();
-   const currentProject = useProjectStore((state) => state.currentProject);
+   const { selectedProjectId } = useProjectStore();
 
-   const projectId = currentProject?.id;
+   console.log(selectedProjectId);
+   const numericProjectId = Number(selectedProjectId);
 
    // Вызываем хук для получения задач по текущему проекту
-   const { data: fetchedTasks, isLoading, isError } = useFetchTasksByProject(projectId!);
+   const { data: fetchedTasks, isLoading, isError } = useFetchTasksByProject(selectedProjectId!);
 
    // Инициализируем состояния задач
    useEffect(() => {
@@ -85,16 +107,16 @@ export function CheckboxTask() {
             if (!(task.id in taskStates)) {
                setTaskChecked(task.id, task.is_completed);
             }
-            // Обработка подзадач, если они есть
-            if (task.subTasks) {
-               initializeTasks(task.subTasks);
+            if (task.subtasks && task.subtasks.length > 0) {
+               initializeTasks(task.subtasks);
             }
          });
       };
-      if (tasks && tasks.length > 0) {
-         initializeTasks(tasks);
+
+      if (fetchedTasks && fetchedTasks.length > 0) {
+         initializeTasks(fetchedTasks);
       }
-   }, [setTaskChecked, taskStates, tasks]);
+   }, [fetchedTasks, setTaskChecked, taskStates]);
 
    if (isLoading) {
       return <div>Загрузка задач...</div>;
@@ -104,13 +126,13 @@ export function CheckboxTask() {
       return <div>Ошибка при загрузке задач</div>;
    }
 
-   if (!tasks || tasks.length === 0) {
+   if (!fetchedTasks || fetchedTasks.length === 0) {
       return <div>Задачи не найдены</div>;
    }
 
    return (
       <div>
-         {tasks.map((task) => (
+         {fetchedTasks.map((task) => (
             <TaskItem key={task.id} level={0} task={task} />
          ))}
       </div>

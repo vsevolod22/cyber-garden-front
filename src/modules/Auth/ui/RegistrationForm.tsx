@@ -70,6 +70,7 @@ export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: Registr
    const onSubmit = async (values: z.infer<typeof registerSchema>) => {
       try {
          const data = await register(values);
+         localStorage.clear();
          setAccessToken(data.access_token);
          setRefreshToken(data.refresh_token);
          toggleOpenStatus(false);

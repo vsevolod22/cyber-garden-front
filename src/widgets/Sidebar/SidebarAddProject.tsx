@@ -12,9 +12,9 @@ import { useCreateProject } from '@/modules/projects/api/CreateProjectApi';
 import { Loader } from '@/shared/ui/loader';
 
 const usersData = [
-   { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)' },
-   { label: 'Козлов А. А. (kozlov@example.com)', value: 'Козлов А. А. (kozlov@example.com)' },
-   { label: 'Семенова И. И. (semenova@example.com)', value: 'Семенова И. И. (semenova@example.com)' },
+   { label: 'Вилков В. В. (240303vilkov@gmail.com)', value: 'Вилков В. В. (240303vilkov@gmail.com)', role: 'Пользователь' },
+   { label: 'Козлов А. А. (kozlov@example.com)', value: 'Козлов А. А. (kozlov@example.com)', role: 'Администратор' },
+   { label: 'Семенова И. И. (semenova@example.com)', value: 'Семенова И. И. (semenova@example.com)', role: 'Менеджер' },
 ];
 
 export const SidebarAddProject = () => {

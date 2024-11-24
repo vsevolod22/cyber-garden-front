@@ -16,7 +16,7 @@ interface Project {
 }
 
 const fetchProjectsByWorkspace = async (workspaceId: number): Promise<Project[]> => {
-   const response = await api.get<Project[]>(`/projects/${workspaceId}/projects/all`, {
+   const response = await api.get<Project[]>(`/projects/${workspaceId}/all`, {
       headers: {
          Accept: 'application/json',
       },

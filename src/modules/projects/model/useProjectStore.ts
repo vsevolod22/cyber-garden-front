@@ -14,6 +14,8 @@ interface ProjectState {
    currentProject: Project | null;
    projects: Project[];
    workspaceProjects: Project[]; // Список проектов текущего рабочего пространства
+   selectedProjectId: number | null; // ID выбранного проекта
+
    addProject: (project: Project) => void;
    clearProjects: () => void;
    filterProjectsByWorkspace: (workspaceId: number) => void; // Метод фильтрации
@@ -22,11 +24,13 @@ interface ProjectState {
    setProjects: (projects: Project[]) => void;
    toggleCurrentProject: (id: number) => void;
    updateProject: (updatedProject: Project) => void;
+   setSelectedProjectId: (id: number | null) => void; // Устанавливает ID выбранного проекта
 }
 
 export const useProjectStore = create<ProjectState>()((set, get) => ({
    projects: [],
    currentProject: null,
+   selectedProjectId: null,
    workspaceProjects: [], // Изначально пустой список
 
    setProjects: (projects) => {
@@ -35,6 +39,9 @@ export const useProjectStore = create<ProjectState>()((set, get) => ({
 
    setCurrentProject: (project) => {
       set({ currentProject: project });
+   },
+   setSelectedProjectId: (id) => {
+      set({ selectedProjectId: id });
    },
 
    addProject: (project) => {
