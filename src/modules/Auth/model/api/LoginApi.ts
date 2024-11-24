@@ -37,6 +37,7 @@ export const useLogin = () => {
    return useMutation<IAuthResponse, AxiosError, LoginCredentials>({
       mutationFn: login,
       onSuccess: (data) => {
+         localStorage.clear();
          setAccessToken(data.access_token);
          setRefreshToken(data.refresh_token);
       },

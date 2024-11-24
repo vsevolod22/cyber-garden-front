@@ -19,29 +19,17 @@ interface TaskComboBoxProps {
    items: ProjectItem[];
    placeholder?: string;
    svg?: React.ReactNode;
-   onSelect?: (selectedValue: string, selectedLabel: string) => void;
+   onSelect?: (selectedValue: string, selectedLabel: string, selectedItem: ProjectItem) => void;
 }
 
 const filterProjects = (items: ProjectItem[], query: string): ProjectItem[] => {
-   return items
-      .map((item) => {
-         if (item.children) {
-            const filteredChildren = filterProjects(item.children, query);
-            if (filteredChildren.length > 0 || item.label.toLowerCase().includes(query.toLowerCase())) {
-               return { ...item, children: filteredChildren };
-            }
-         } else if (item.label.toLowerCase().includes(query.toLowerCase())) {
-            return item;
-         }
-         return null;
-      })
-      .filter((item): item is ProjectItem => item !== null);
+   return items.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
 };
 
 const renderItems = (
    items: ProjectItem[],
    selectedValue: string,
-   onSelect: (value: string, label: string) => void,
+   onSelect: (value: string, label: string, item: ProjectItem) => void,
 ): React.ReactNode => {
    return items.map((item) => {
       if (item.children && item.children.length > 0) {
@@ -56,7 +44,7 @@ const renderItems = (
                key={item.value}
                className='flex justify-between'
                value={item.value}
-               onSelect={() => onSelect(item.value, item.label)}
+               onSelect={() => onSelect(item.value, item.label, item)}
             >
                {item.label}
                <Check className={cn('ml-auto', selectedValue === item.value ? 'opacity-100' : 'opacity-0')} />
@@ -67,7 +55,7 @@ const renderItems = (
 };
 
 export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
-   items,
+   items, // Уже преобразованные через mapProjectsToProjectItems
    className,
    btnWidth,
    placeholder = 'Найти проект...',
@@ -80,13 +68,13 @@ export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
    const [value, setValue] = React.useState('');
    const [label, setLabel] = React.useState(defaultLabel);
 
-   const handleSelect = (selectedValue: string, selectedLabel: string) => {
+   const handleSelect = (selectedValue: string, selectedLabel: string, selectedItem: ProjectItem) => {
       setValue(selectedValue);
       setLabel(selectedLabel);
       setInputValue('');
       setOpen(false);
       if (onSelect) {
-         onSelect(selectedValue, selectedLabel);
+         onSelect(selectedValue, selectedLabel, selectedItem);
       }
    };
 

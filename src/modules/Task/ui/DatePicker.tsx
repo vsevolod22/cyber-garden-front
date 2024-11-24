@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/utils/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { Button } from '@/shared/ui/button';
@@ -11,10 +10,22 @@ interface DatePickerProps {
    className?: string;
    pickerName: string;
    svg?: React.ReactNode;
+   selectedDate?: Date;
+   onDateChange?: (date: Date | undefined) => void;
 }
 
-export function DatePicker({ pickerName, svg, className }: DatePickerProps) {
-   const [date, setDate] = React.useState<Date>();
+export function DatePicker({ pickerName, svg, className, selectedDate, onDateChange }: DatePickerProps) {
+   const [date, setDate] = React.useState<Date | undefined>(selectedDate);
+
+   React.useEffect(() => {
+      setDate(selectedDate);
+   }, [selectedDate]);
+
+   React.useEffect(() => {
+      if (onDateChange) {
+         onDateChange(date);
+      }
+   }, [date, onDateChange]);
 
    return (
       <Popover>

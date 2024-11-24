@@ -4,6 +4,7 @@ import { api } from '@/shared/api/axios-instance';
 import { useEffect } from 'react';
 import type { AxiosError } from 'axios';
 import { useTaskStore } from '@/modules/Task/model/store/TaskStore';
+import { useProjectStore } from '../model/useProjectStore';
 
 interface Task {
    name: string;
@@ -18,6 +19,8 @@ interface Task {
    is_completed: boolean;
    created_at: string;
    updated_at: string;
+   parent_task: Task | null;
+   subtasks: Task[];
 }
 
 const fetchTasksByProject = async (projectId: number): Promise<Task[]> => {
@@ -31,10 +34,10 @@ const fetchTasksByProject = async (projectId: number): Promise<Task[]> => {
 
 export const useFetchTasksByProject = (projectId: number) => {
    const setTasks = useTaskStore((state) => state.setTasks);
-
+   const { projects } = useProjectStore();
    const queryResult = useQuery<Task[], AxiosError>({
       queryKey: ['tasks', projectId],
-      queryFn: () => fetchTasksByProject(projectId),
+      queryFn: () => fetchTasksByProject(projects[0].id),
    });
 
    const { data, error, isSuccess, isError } = queryResult;

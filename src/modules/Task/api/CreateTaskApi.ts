@@ -4,13 +4,13 @@ import { AxiosError } from 'axios';
 import { useTaskStore } from '@/modules/Task/model/store/TaskStore';
 
 interface CreateTaskData {
-   name: string;
-   due_date: string;
-   priority: string;
-   project_id: number;
-   assigned_to: number;
-   reminder_time: string;
-   created_by: number;
+   name: string; // Название задачи
+   due_date: string; // Дата выполнения задачи в формате ISO (например, "2024-11-24T12:00:00Z")
+   priority: string; // Приоритет задачи (например, "Высокий", "Средний", "Низкий")
+   project_id: number; // Идентификатор проекта, к которому относится задача
+   assigned_to: number | null; // Идентификатор пользователя, назначенного на задачу (или null)
+   reminder_time: string; // Время напоминания в формате ISO (может быть пустой строкой, если не указано)
+   created_by: number; // Идентификатор пользователя, создавшего задачу
 }
 
 interface Task {
