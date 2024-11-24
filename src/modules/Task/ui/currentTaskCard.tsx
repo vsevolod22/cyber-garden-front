@@ -9,6 +9,8 @@ import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
 import { useTaskStore } from '../model/store/TaskStore';
 import { useState, useEffect } from 'react';
 import { Title } from '@/shared/ui/title';
+import { Input } from '@/shared/ui/input';
+import { Task } from './Task';
 
 interface CurrentTaskCardProps {
    className?: string;
@@ -27,20 +29,31 @@ const flags: Flag[] = [
    { id: 4, className: 'mr-2 w-4 fill-blue-600', priority: 'Низкий' },
 ];
 
+interface Subtask {
+   id: number;
+   name: string;
+   completed: boolean;
+}
+
 export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
    const { selectedTaskId, getTaskById, updateTask } = useTaskStore();
    const task = getTaskById(selectedTaskId || 0);
-
+   const [closeSubTuskCreate, setCloseSubTuskCreate] = useState<boolean>(false);
    const [currentFlag, setCurrentFlag] = useState<Flag>(flags[0]);
    const [dueDate, setDueDate] = useState<Date | undefined>();
    const [reminderDate, setReminderDate] = useState<Date | undefined>();
    const [project, setProject] = useState<string | null>(null);
+   const [isAddingSubtask, setIsAddingSubtask] = useState(false);
+   const [newSubtaskName, setNewSubtaskName] = useState('');
 
    useEffect(() => {
       if (task) {
          setCurrentFlag(flags.find((flag) => flag.priority === task.priority) || flags[0]);
          setDueDate(task.due_date ? new Date(task.due_date) : undefined);
          setReminderDate(task.reminder_time ? new Date(task.reminder_time) : undefined);
+         setProject(task.project_id ? task.project_id.toString() : null);
+         setIsAddingSubtask(false);
+         setNewSubtaskName('');
       }
    }, [task]);
 
@@ -64,6 +77,23 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
       }
    };
 
+   const handleAddSubtask = () => {
+      if (task && newSubtaskName.trim() !== '') {
+         const newSubtask: Subtask = {
+            id: Date.now(),
+            name: newSubtaskName,
+            completed: false,
+         };
+         const updatedTask = {
+            ...task,
+            subtasks: [...(task.subtasks || []), newSubtask],
+         };
+         updateTask(updatedTask);
+         setNewSubtaskName('');
+         setIsAddingSubtask(false);
+      }
+   };
+
    if (!task) {
       return <div>Задача не выбрана</div>;
    }
@@ -82,12 +112,39 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                   placeholder='Описание задачи'
                   onChange={(e) => updateTask({ ...task, description: e.target.value })}
                />
-               <Button className='my-4 flex h-10 w-full justify-start text-base font-medium' variant='ghost'>
-                  <div className='flex gap-2'>
-                     <Plus className='text-primary' />
-                     Добавить подзадачу
+               {task.subtasks && task.subtasks.length > 0 && (
+                  <div className='subtasks-list'>
+                     {task.subtasks.map((subtask) => (
+                        <div key={subtask.id} className='flex items-center'>
+                           <input
+                              type='checkbox'
+                              checked={subtask.is_completed}
+                              onChange={() => {
+                                 const updatedSubtasks = task.subtasks.map((s) =>
+                                    s.id === subtask.id ? { ...s, completed: !s.is_completed } : s,
+                                 );
+                                 updateTask({ ...task, subtasks: updatedSubtasks });
+                              }}
+                           />
+                           <span className={subtask.is_completed ? 'line-through' : ''}>{subtask.name}</span>
+                        </div>
+                     ))}
                   </div>
-               </Button>
+               )}
+               {isAddingSubtask ? (
+                  <Task setButtonClick={() => setCloseSubTuskCreate(false)} />
+               ) : (
+                  <Button
+                     className='my-4 flex h-10 w-full justify-start text-base font-medium'
+                     variant='ghost'
+                     onClick={() => setIsAddingSubtask(true)}
+                  >
+                     <div className='flex gap-2'>
+                        <Plus className='text-primary' />
+                        Добавить подзадачу
+                     </div>
+                  </Button>
+               )}
             </div>
             <div className='min-w-80 rounded-lg bg-accent p-4'>
                <div className='flex w-full min-w-72 flex-col gap-3'>
@@ -105,7 +162,7 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                   <DatePicker
                      className='h-12 w-full'
                      pickerName='Выберите дату выполнения задания'
-                     selectedDate={task.due_date ? new Date(task.due_date) : undefined}
+                     selectedDate={dueDate}
                      onDateChange={(date) => handleDateChange('due_date', date)}
                      svg={<CalendarIcon className='mr-2 w-4' />}
                   />
@@ -127,7 +184,7 @@ export const CurrentTaskCard = ({ className }: CurrentTaskCardProps) => {
                   <DatePicker
                      className='h-12 w-full'
                      pickerName='Выберите дату напоминаний'
-                     selectedDate={task.reminder_time ? new Date(task.reminder_time) : undefined}
+                     selectedDate={reminderDate}
                      onDateChange={(date) => handleDateChange('reminder_time', date)}
                      svg={<AlarmClock className='mr-2 w-4' />}
                   />
