@@ -11,6 +11,9 @@ import { useEffect, useState } from 'react';
 import { useTokenStore } from '../model/store/authStore';
 import { Loader } from '@/shared/ui/loader';
 import { useCreateWorkspace } from '@/modules/WorkSpaces/model/api/workSpacesPost';
+import { useWorkspaceStore } from '@/modules/WorkSpaces/model/store/workSpaceStore';
+import { useLogin } from '../model/api/LoginApi';
+import { useNavigate } from 'react-router-dom';
 
 const registerSchema = loginSchema
    .extend({
@@ -28,34 +31,17 @@ interface RegistrationFormProps {
 }
 
 export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: RegistrationFormProps) => {
-   const { mutateAsync: register, isPending } = useRegister();
-   const [error, setError] = useState<string | null>(null);
+   const { mutateAsync: register, isPending: isRegistering } = useRegister();
+   const { mutateAsync: login, isPending: isLoggingIn } = useLogin();
+   const { mutateAsync: createWorkspace } = useCreateWorkspace();
    const { setAccessToken, setRefreshToken } = useTokenStore();
-   const { mutate: createWorkspace } = useCreateWorkspace();
+   const addWorkspace = useWorkspaceStore((state) => state.addWorkspace);
+   const navigate = useNavigate(); // Навигация
+   const [error, setError] = useState<string | null>(null);
 
    useEffect(() => {
-      setLoadingStatus(isPending);
-   }, [isPending]);
-
-   const handleCreateWorkspace = async () => {
-      try {
-         const defaultWorkspaceData = {
-            name: 'newSpace',
-            created_by: 0,
-         };
-
-         await createWorkspace(defaultWorkspaceData, {
-            // onSuccess: (newWorkspace) => {
-            //    console.log('Воркспейс успешно создан:', newWorkspace);
-            // },
-            onError: (error) => {
-               console.error('Ошибка при создании воркспейса:', error.message);
-            },
-         });
-      } catch (error) {
-         console.error('Ошибка в handleCreateWorkspace:', error);
-      }
-   };
+      setLoadingStatus(isRegistering || isLoggingIn); // Учитываем состояние загрузки регистрации и логина
+   }, [isRegistering, isLoggingIn]);
 
    const registerForm = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
@@ -68,21 +54,33 @@ export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: Registr
    });
 
    const onSubmit = async (values: z.infer<typeof registerSchema>) => {
+      setError(null);
       try {
-         const data = await register(values);
-         localStorage.clear();
-         setAccessToken(data.access_token);
-         setRefreshToken(data.refresh_token);
-         toggleOpenStatus(false);
-         handleCreateWorkspace();
-      } catch (error) {
-         setError('Ошибка при регистрации');
+         // Регистрация
+         const registerData = await register(values);
+         setAccessToken(registerData.access_token);
+         setRefreshToken(registerData.refresh_token);
+
+         // Автоматический логин
+         const loginData = await login({ email: values.email, password: values.password });
+         setAccessToken(loginData.access_token);
+         setRefreshToken(loginData.refresh_token);
+
+         // Создание воркспейса
+         const workspace = await createWorkspace({ name: 'newSpace', created_by: loginData.user_id });
+         addWorkspace(workspace);
+
+         toggleOpenStatus(false); // Закрываем форму
+         navigate('/'); // Перенаправляем на главную страницу
+      } catch (err) {
+         console.error('Ошибка в процессе регистрации:', err);
+         setError('Ошибка при регистрации. Попробуйте ещё раз.');
       }
    };
 
    return (
       <>
-         {isPending ? (
+         {isRegistering || isLoggingIn ? (
             <div className='flex h-60 w-full items-center justify-center'>
                <Loader />
             </div>

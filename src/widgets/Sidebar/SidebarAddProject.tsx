@@ -115,7 +115,7 @@ export const SidebarAddProject = () => {
                />
                <div className='max-w-[380px] space-y-2'>
                   {selectedUsers.map((user, index) => (
-                     <div key={index} className='flex items-center justify-between rounded bg-gray-100 px-3 py-2'>
+                     <div key={index} className='flex items-center justify-between rounded bg-accent px-3 py-2'>
                         <p className='text-sm'>{user}</p>
                         <Button size='icon' variant='ghost' onClick={() => handleRemoveUser(user)}>
                            <X className='h-4 w-4' />

@@ -11,6 +11,7 @@ import { useTokenStore } from '../model/store/authStore';
 import { Loader } from '@/shared/ui/loader';
 import TelegramLoginButton from './telegrammBtn';
 import { useFetchWorkspacesAsync } from '@/modules/WorkSpaces/model/api/workSpacesGet';
+import { useNavigate } from 'react-router-dom';
 
 export const loginSchema = z.object({
    email: z.string().email({ message: 'Некорректный email' }),
@@ -27,6 +28,7 @@ export const LoginForm = ({ toggleOpenStatus, setLoadingStatus }: LoginFormProps
    const { refetch: fetchWorkspaces, isFetching } = useFetchWorkspacesAsync();
    const { mutateAsync: login, isPending } = useLogin();
    const [error, setError] = useState<string | null>(null);
+   const navigate = useNavigate(); // Инициализация навигации
 
    useEffect(() => {
       setLoadingStatus(isPending || isFetching); // Учитываем загрузку логина и рабочих пространств
@@ -51,6 +53,7 @@ export const LoginForm = ({ toggleOpenStatus, setLoadingStatus }: LoginFormProps
          await fetchWorkspaces();
 
          toggleOpenStatus(false); // Закрываем форму
+         navigate('/');
       } catch (err) {
          console.error('Ошибка при входе:', err);
          setError('Ошибка при входе'); // Устанавливаем сообщение об ошибке

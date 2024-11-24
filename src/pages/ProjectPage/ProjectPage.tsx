@@ -5,6 +5,7 @@ import { CheckboxTask } from '@/modules/Task/ui/checkBocks';
 import { useFetchProjectById } from '@/modules/projects/api/GetProject';
 import { useProjectStore } from '@/modules/projects/model/useProjectStore';
 import { Button } from '@/shared/ui/button';
+import { Loader } from '@/shared/ui/loader';
 import { Container } from '@/widgets/Container';
 import type { AxiosError } from 'axios';
 import { Plus, X } from 'lucide-react';
@@ -15,12 +16,14 @@ export const ProjectPage = () => {
    const { id } = useParams<{ id: string }>();
    const { selectedProjectId, setSelectedProjectId, setCurrentProject } = useProjectStore();
    const { taskStates } = useTaskStore(); // Получаем состояние из Zustand
+
    useEffect(() => {
       const numericProjectId = Number(id);
       setSelectedProjectId(numericProjectId!);
    }, [id]);
 
    const { data: project, isLoading, isError, error } = useFetchProjectById(selectedProjectId!);
+
    useEffect(() => {
       if (!isLoading) {
          setCurrentProject(project!);
@@ -29,7 +32,11 @@ export const ProjectPage = () => {
 
    const isAnyTaskChecked = Object.values(taskStates).some((value) => value === true); // Проверяем, есть ли выбранные задачи
    if (isLoading) {
-      return <div>Загрузка проекта...</div>;
+      return (
+         <div>
+            <Loader />
+         </div>
+      );
    }
 
    if (isError) {
@@ -45,7 +52,7 @@ export const ProjectPage = () => {
       <Container>
          <div className='mt-14 flex flex-col gap-8'>
             <div className='flex justify-between'>
-               <h1 className='text-4xl font-bold'>Сегодня</h1>
+               <h1 className='text-4xl font-bold'>Проект</h1>
                {isAnyTaskChecked && <Button className='bg-red-500 hover:bg-red-400'>Закрыть все задачи</Button>}
             </div>
 

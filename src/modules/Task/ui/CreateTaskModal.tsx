@@ -2,7 +2,7 @@ import { Dialog, DialogOverlay, DialogPortal, DialogTrigger } from '@/shared/ui/
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '@/utils/lib/utils';
 import { X } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/shared/ui/button';
 
 interface CreateModalProps {
@@ -61,8 +61,10 @@ export const CreateTaskModal: React.FC<CreateModalProps> = ({
    closeIcon,
    closeClassName,
 }) => {
+   const [isOpen, setIsOpen] = useState(false);
+
    return (
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
          {showButton && (
             <DialogTrigger className='w-full'>
                <div>
@@ -70,6 +72,7 @@ export const CreateTaskModal: React.FC<CreateModalProps> = ({
                      className={cn('my-4 flex h-10 w-full justify-start text-base font-medium', buttonClassName)}
                      prefix={buttonIcon}
                      variant='ghost'
+                     onClick={() => setIsOpen(true)}
                   >
                      {buttonChildren}
                   </Button>
@@ -82,7 +85,7 @@ export const CreateTaskModal: React.FC<CreateModalProps> = ({
             closeIcon={closeIcon}
             overlayClassName={overlayClassName}
          >
-            {children}
+            {React.cloneElement(children as React.ReactElement, { setModalOpen: setIsOpen })}
          </CreateModalContent>
       </Dialog>
    );

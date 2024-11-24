@@ -1,15 +1,17 @@
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/shared/api/axios-instance';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import { useTokenStore } from '@/modules/Auth/model/store/authStore';
+import { useWorkspaceStore } from '../store/workSpaceStore';
 
 interface CreateWorkspaceData {
-   name: string;
    created_by: number;
+   name: string;
 }
 
 interface Workspace {
-   workspace_name: string;
    owner_id: number;
+   workspace_name: string;
 }
 
 const createWorkspace = async (workspaceData: CreateWorkspaceData): Promise<Workspace> => {
