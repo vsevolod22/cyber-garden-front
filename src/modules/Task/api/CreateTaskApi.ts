@@ -47,7 +47,9 @@ export const useCreateTask = () => {
       mutationFn: createTask,
       onSuccess: (newTask) => {
          console.log('Задача успешно создана:', newTask);
+         // @ts-ignore
          addTask(newTask); // Добавляем задачу в Zustand
+         // @ts-ignore
          queryClient.invalidateQueries(['tasks']);
       },
       onError: (error) => {

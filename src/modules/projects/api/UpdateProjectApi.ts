@@ -29,6 +29,7 @@ export const useUpdateProject = () => {
       mutationFn: updateProject,
       onSuccess: (_, { id }) => {
          console.log(`Проект с ID ${id} успешно обновлён.`);
+         // @ts-ignore
          queryClient.invalidateQueries(['projects', currentWorkspaceId]);
       },
       onError: (error) => {

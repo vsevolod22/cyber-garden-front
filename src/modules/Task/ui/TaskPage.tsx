@@ -9,7 +9,7 @@ interface TaskProps {
    className?: string;
 }
 
-export const TaskPage = ({ className }: TaskProps) => {
+export const TaskPage = ({}: TaskProps) => {
    const { taskStates } = useTaskStore(); // Получаем состояние из Zustand
    const isAnyTaskChecked = Object.values(taskStates).some((value) => value === true); // Проверяем, есть ли выбранные задачи
 

@@ -59,12 +59,7 @@ interface CreateTaskData {
    parent_task_id: number;
 }
 
-export const Task = ({
-   className,
-   setButtonClick,
-   setModalOpen,
-   parentTask,
-}: TaskProps & { setModalOpen?: (isOpen: boolean) => void }) => {
+export const Task = ({ setModalOpen, parentTask }: TaskProps & { setModalOpen?: (isOpen: boolean) => void }) => {
    const { data: projects, isSuccess } = useFetchProjectsByWorkspace();
    const [name, setName] = useState('');
    const [description, setDescription] = useState('');
@@ -168,14 +163,14 @@ export const Task = ({
          </CardHeader>
          <CardFooter className='lg:h-22 border-т flex flex-wrap items-center justify-between gap-4 py-3 esmob:justify-center'>
             <div className='ml-5 flex flex-wrap gap-2 esmob:ml-0'>
-               {isSuccess && <TaskComboBox items={projectItems} onSelect={(value, label, item) => setProject(item)} />}
+               {isSuccess && <TaskComboBox items={projectItems} onSelect={(_value, _label, item) => setProject(item)} />}
 
                <TaskComboBox
                   defaultLabel='Исполнитель'
                   items={users}
                   placeholder='Выберите пользователя'
                   svg={<User className='w-4' />}
-                  onSelect={(value, label, item) => setAssignedTo(item)}
+                  onSelect={(_value, _label, item) => setAssignedTo(item)}
                />
             </div>
 

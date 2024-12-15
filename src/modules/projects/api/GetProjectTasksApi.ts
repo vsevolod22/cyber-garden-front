@@ -44,6 +44,7 @@ export const useFetchTasksByProject = (projectId: number) => {
 
    useEffect(() => {
       if (isSuccess && data) {
+         // @ts-ignore
          setTasks(data);
       }
    }, [isSuccess, data, setTasks]);

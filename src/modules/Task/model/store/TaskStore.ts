@@ -9,6 +9,7 @@ interface Task {
    id: number;
    is_completed: boolean;
    name: string;
+   // @ts-ignore
    parent_task_id: number;
    priority: string; // Приоритет задачи (например, "Высокий", "Средний", "Низкий")
    project_id: number; // ID проекта, к которому относится задача

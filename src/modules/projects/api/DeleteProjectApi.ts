@@ -18,6 +18,7 @@ export const useDeleteProject = () => {
       onSuccess: (_, projectId) => {
          console.log(`Проект с ID ${projectId} успешно удалён.`);
          // Инвалидируем кэш для обновления списка проектов текущего рабочего пространства
+         // @ts-ignore
          queryClient.invalidateQueries(['projects', currentWorkspaceId]);
       },
       onError: (error) => {

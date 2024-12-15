@@ -6,6 +6,7 @@ import { ProfilePage } from '@/pages/ProfilePage/ProfilePage';
 import { ProjectPage } from '@/pages/ProjectPage/ProjectPage';
 import { SchedulePage } from '@/pages/SchedulePage/SchedulePage';
 import { Statistic } from '@/pages/Statistic/Statistic';
+import WordFileUploaderPage from '@/pages/WorldFileUploaderPage/WordFileUploaderPage';
 
 export enum AppRoutes {
    MAIN = 'main',
@@ -14,6 +15,7 @@ export enum AppRoutes {
    SCHEDULE = 'schedule',
    NOT_FOUND = 'not_found',
    STATISTIC = 'statistic',
+   WORD = 'word',
 }
 
 export const RoutePath: Record<AppRoutes, string> = {
@@ -23,6 +25,7 @@ export const RoutePath: Record<AppRoutes, string> = {
    [AppRoutes.PROJECT]: '/projects/:id', // Параметр id для страницы проекта
    [AppRoutes.SCHEDULE]: '/schedule',
    [AppRoutes.STATISTIC]: '/statistic',
+   [AppRoutes.WORD]: '/word',
 };
 
 export const routeConfig: Record<AppRoutes, RouteObject> = {
@@ -50,5 +53,9 @@ export const routeConfig: Record<AppRoutes, RouteObject> = {
    [AppRoutes.STATISTIC]: {
       path: RoutePath.statistic,
       element: <Statistic />,
+   },
+   [AppRoutes.WORD]: {
+      path: RoutePath.word,
+      element: <WordFileUploaderPage/>,
    },
 };

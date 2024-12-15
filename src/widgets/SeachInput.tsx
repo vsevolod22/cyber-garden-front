@@ -8,7 +8,7 @@ interface SeachInputProps {
    className?: string;
 }
 
-export const SeachInput = ({ className }: SeachInputProps) => {
+export const SeachInput = ({ }: SeachInputProps) => {
    const [focused, setFocused] = useState(false);
 
    const clickOutsideRef = useClickOutside<HTMLDivElement>(() => {

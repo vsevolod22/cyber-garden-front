@@ -15,8 +15,8 @@ const items = [
       icon: BookMarked,
    },
    {
-      title: 'Достижения',
-      url: '/achievements',
+      title: 'Курсовой проект',
+      url: '/word',
       icon: Award,
    },
 ];

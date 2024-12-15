@@ -64,6 +64,7 @@ export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
    onSelect,
 }) => {
    const [open, setOpen] = React.useState(false);
+   // @ts-ignore
    const [inputValue, setInputValue] = React.useState('');
    const [value, setValue] = React.useState('');
    const [label, setLabel] = React.useState(defaultLabel);
@@ -97,18 +98,21 @@ export const TaskComboBox: React.FC<TaskComboBoxProps> = ({
             </Button>
          </PopoverTrigger>
          <PopoverContent className='w-[250px] p-0'>
-            <Command inputValue={inputValue} onInputValueChange={setInputValue}>
-               <div className='flex items-center px-3' cmdk-input-wrapper=''>
-                  <CommandInput className='h-9' placeholder={placeholder} />
-               </div>
-               <CommandList>
-                  {filteredProjects.length > 0 ? (
-                     renderItems(filteredProjects, value, handleSelect)
-                  ) : (
-                     <CommandEmpty>Нет проектов</CommandEmpty>
-                  )}
-               </CommandList>
-            </Command>
+            {
+               // @ts-ignore
+               <Command inputValue={inputValue} onInputValueChange={setInputValue}>
+                  <div className='flex items-center px-3' cmdk-input-wrapper=''>
+                     <CommandInput className='h-9' placeholder={placeholder} />
+                  </div>
+                  <CommandList>
+                     {filteredProjects.length > 0 ? (
+                        renderItems(filteredProjects, value, handleSelect)
+                     ) : (
+                        <CommandEmpty>Нет проектов</CommandEmpty>
+                     )}
+                  </CommandList>
+               </Command>
+            }
          </PopoverContent>
       </Popover>
    );

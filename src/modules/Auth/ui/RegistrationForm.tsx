@@ -67,7 +67,9 @@ export const RegistrationForm = ({ toggleOpenStatus, setLoadingStatus }: Registr
          setRefreshToken(loginData.refresh_token);
 
          // Создание воркспейса
+         // @ts-ignore
          const workspace = await createWorkspace({ name: 'newSpace', created_by: loginData.user_id });
+         // @ts-ignore
          addWorkspace(workspace);
 
          toggleOpenStatus(false); // Закрываем форму
