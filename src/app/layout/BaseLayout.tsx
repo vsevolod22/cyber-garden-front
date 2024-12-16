@@ -17,7 +17,7 @@ const BaseLayout = () => {
          {accessToken ? (
             <SidebarProvider>
                <Sidebar />
-               <SidebarInset>
+               <SidebarInset className='w-[75vw]'>
                   <div className='h-screen bg-background'>
                      <Header />
                      <div className='px-6'>
